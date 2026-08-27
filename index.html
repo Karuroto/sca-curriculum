@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程体系与教学框架 — SCA 国际高中</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #F7F8FF; --primary: #5B6CFF; --primary-light: #E8EAFF; --primary-dark: #3D4BD0;
+            --accent-yellow: #FFD166; --accent-pink: #FF7AB6; --accent-green: #55C59D;
+            --accent-orange: #FF9F43; --accent-cyan: #38BDF8; --accent-purple: #A78BFA;
+            --text: #1F2433; --text-2: #6B7280; --card: #FFFFFF; --border: #E5E7EB;
+            --shadow: 0 2px 10px rgba(91,108,255,0.07); --shadow-hover: 0 8px 24px rgba(91,108,255,0.14);
+            --radius: 14px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+        body.en { font-family: -apple-system, 'Inter', 'Segoe UI', sans-serif; }
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(247,248,255,0.88); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 1.5rem; height: 54px; overflow-x: auto; }
+        .nav-brand { font-weight: 800; font-size: .88rem; color: var(--primary); white-space: nowrap; }
+        .nav-links { display: flex; gap: .2rem; }
+        .nav-links a { text-decoration: none; color: var(--text-2); font-size: .82rem; padding: .35rem .65rem; border-radius: 8px; transition: all .2s; white-space: nowrap; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); background: var(--primary-light); }
+        .nav-spacer { flex: 1; }
+        .lang-toggle { display: flex; align-items: center; background: var(--primary-light); border-radius: 20px; padding: 3px; flex-shrink: 0; }
+        .lang-btn { border: none; cursor: pointer; font-size: .78rem; font-weight: 600; padding: .3rem .75rem; border-radius: 17px; background: transparent; color: var(--text-2); transition: all .25s; }
+        .lang-btn.active { background: var(--primary); color: #fff; box-shadow: 0 1px 4px rgba(91,108,255,.25); }
+        .hero { text-align: center; padding: 3.5rem 2rem 2.5rem; background: linear-gradient(160deg, #E8EAFF 0%, #F7F8FF 50%, #FFF5F9 100%); }
+        .hero-badge { display: inline-block; background: var(--primary); color: #fff; font-size: .75rem; font-weight: 600; padding: .28rem 1rem; border-radius: 20px; margin-bottom: 1.2rem; letter-spacing: .04em; }
+        .hero h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: .5rem; line-height: 1.3; }
+        .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--primary), var(--accent-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { font-size: 1rem; color: var(--text-2); max-width: 560px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 3rem 0; }
+        .sec-head { display: flex; align-items: center; gap: .8rem; margin-bottom: .4rem; }
+        .sec-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--primary); color: #fff; font-weight: 700; font-size: .85rem; border-radius: 10px; flex-shrink: 0; }
+        .sec-title { font-size: 1.35rem; font-weight: 700; }
+        .sec-sub { font-size: .88rem; color: var(--text-2); margin: .2rem 0 1.6rem 2.7rem; line-height: 1.6; }
+        .grade-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .grade-tab { padding: .6rem 1.4rem; border-radius: 12px; border: 2px solid var(--border); background: var(--card); cursor: pointer; font-weight: 700; font-size: .9rem; color: var(--text-2); transition: all .25s; }
+        .grade-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .grade-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(91,108,255,.25); }
+        .grade-tab .tab-count { display: inline-block; background: rgba(255,255,255,.3); border-radius: 8px; font-size: .7rem; padding: .1rem .45rem; margin-left: .4rem; font-weight: 600; }
+        .grade-tab.active .tab-count { background: rgba(255,255,255,.25); }
+        .grade-panel { display: none; animation: fadeUp .35s ease; }
+        .grade-panel.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+        .class-banner { background: linear-gradient(135deg, var(--primary-light) 0%, #FFF 100%); border-radius: var(--radius); padding: 1.2rem 1.5rem; margin-bottom: 1.3rem; display: flex; align-items: center; gap: 1rem; border: 1px solid var(--border); }
+        .class-banner .cb-icon { font-size: 1.6rem; flex-shrink: 0; }
+        .class-banner .cb-text { flex: 1; }
+        .class-banner .cb-title { font-weight: 700; font-size: 1rem; margin-bottom: .15rem; }
+        .class-banner .cb-desc { font-size: .85rem; color: var(--text-2); }
+        .class-banner .cb-classes { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
+        .class-chip { background: var(--primary); color: #fff; border-radius: 8px; padding: .25rem .7rem; font-size: .78rem; font-weight: 600; }
+        .subj-list { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+        .subj-mini { background: var(--card); border-radius: 12px; padding: 1.2rem 1.3rem; box-shadow: var(--shadow); border-left: 4px solid var(--primary); transition: transform .25s, box-shadow .25s; opacity: 0; transform: translateY(14px); }
+        .subj-mini.show { opacity: 1; transform: none; transition: opacity .4s ease, transform .4s ease, box-shadow .25s; }
+        .subj-mini:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .subj-mini.t-green { border-left-color: var(--accent-green); }
+        .subj-mini.t-pink { border-left-color: var(--accent-pink); }
+        .subj-mini.t-yellow { border-left-color: var(--accent-yellow); }
+        .subj-mini.t-orange { border-left-color: var(--accent-orange); }
+        .subj-mini.t-cyan { border-left-color: var(--accent-cyan); }
+        .subj-mini.t-purple { border-left-color: var(--accent-purple); }
+        .sm-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .6rem; gap: .5rem; }
+        .sm-name { font-size: .98rem; font-weight: 700; }
+        .badge { font-size: .66rem; font-weight: 600; padding: .18rem .55rem; border-radius: 8px; white-space: nowrap; }
+        .badge-req { background: #FFF3E0; color: #E67E22; }
+        .badge-elec { background: #FFF0F6; color: #D63384; }
+        .badge-merge { background: #E0F4FF; color: #0369A1; }
+        .sm-row { display: flex; align-items: baseline; gap: .4rem; margin-bottom: .25rem; font-size: .82rem; }
+        .sm-row .lbl { color: var(--text-2); white-space: nowrap; flex-shrink: 0; min-width: 3.2em; }
+        .sm-row .val { font-weight: 600; }
+        .sm-note { margin-top: .5rem; padding-top: .5rem; border-top: 1px dashed var(--border); font-size: .78rem; color: var(--text-2); line-height: 1.5; }
+        .sm-note em { font-style: normal; color: var(--accent-pink); font-weight: 600; }
+        .accordion { display: flex; flex-direction: column; gap: .8rem; }
+        .acc-item { background: var(--card); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; transition: box-shadow .25s; }
+        .acc-item:hover { box-shadow: var(--shadow-hover); }
+        .acc-header { display: flex; align-items: center; gap: .8rem; padding: 1.1rem 1.4rem; cursor: pointer; user-select: none; transition: background .2s; }
+        .acc-header:hover { background: var(--primary-light); }
+        .acc-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+        .acc-icon.blue { background: var(--primary-light); color: var(--primary); }
+        .acc-icon.green { background: #E0F7ED; color: #2D8A5E; }
+        .acc-icon.pink { background: #FFF0F6; color: #D63384; }
+        .acc-icon.yellow { background: #FFF8E1; color: #B8860B; }
+        .acc-icon.orange { background: #FFF3E0; color: #E67E22; }
+        .acc-icon.purple { background: #F3E8FF; color: #7C3AED; }
+        .acc-title { font-weight: 700; font-size: .95rem; flex: 1; }
+        .acc-arrow { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; transition: transform .3s; color: var(--text-2); font-size: .8rem; }
+        .acc-item.open .acc-arrow { transform: rotate(180deg); }
+        .acc-body { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+        .acc-body-inner { padding: 0 1.4rem 1.2rem; font-size: .88rem; color: var(--text-2); line-height: 1.7; }
+        .acc-body-inner p { margin-bottom: .6rem; }
+        .acc-body-inner strong { color: var(--text); }
+        .acc-body-inner .highlight { background: #FFF8E1; padding: .15rem .5rem; border-radius: 6px; font-size: .82rem; color: #B8860B; display: inline-block; margin: .2rem 0; }
+        .acc-body-inner ul { padding-left: 1.2rem; margin-bottom: .6rem; }
+        .acc-body-inner li { margin-bottom: .3rem; }
+        .advantage-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .8rem; margin-top: .8rem; }
+        .adv-card { background: #F0F4FF; border-radius: 10px; padding: .8rem 1rem; border: 1px solid var(--primary-light); }
+        .adv-card .adv-icon { font-size: 1.3rem; margin-bottom: .3rem; }
+        .adv-card .adv-title { font-weight: 700; font-size: .85rem; color: var(--text); margin-bottom: .2rem; }
+        .adv-card .adv-desc { font-size: .78rem; color: var(--text-2); line-height: 1.5; }
+        .assess-grid { display: grid; gap: 1.3rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+        .assess-card { background: var(--card); border-radius: 12px; padding: 1.3rem; box-shadow: var(--shadow); text-align: center; transition: transform .25s, box-shadow .25s; position: relative; overflow: hidden; }
+        .assess-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .assess-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+        .assess-card:nth-child(1)::before { background: var(--accent-cyan); }
+        .assess-card:nth-child(2)::before { background: var(--accent-green); }
+        .assess-card:nth-child(3)::before { background: var(--accent-yellow); }
+        .assess-card:nth-child(4)::before { background: var(--accent-orange); }
+        .assess-card:nth-child(5)::before { background: var(--accent-pink); }
+        .ac-icon { font-size: 2rem; margin-bottom: .6rem; }
+        .ac-name { font-weight: 700; font-size: .95rem; margin-bottom: .3rem; }
+        .ac-en { font-size: .75rem; color: var(--text-2); margin-bottom: .6rem; }
+        .ac-desc { font-size: .8rem; color: var(--text-2); line-height: 1.55; text-align: left; }
+        .ac-weight { display: inline-block; margin-top: .7rem; padding: .3rem .8rem; border-radius: 8px; font-weight: 700; font-size: .9rem; }
+        .ac-weight.w10 { background: #E0F7ED; color: #2D8A5E; }
+        .ac-weight.w20 { background: #FFF8E1; color: #B8860B; }
+        .ac-weight.w30 { background: #FFF0F6; color: #D63384; }
+        .weight-bar-wrap { margin: 1.5rem 0; }
+        .weight-bar { display: flex; height: 40px; border-radius: 12px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,.08); }
+        .wb-seg { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; }
+        .wb-seg:nth-child(1) { background: var(--accent-cyan); }
+        .wb-seg:nth-child(2) { background: var(--accent-green); }
+        .wb-seg:nth-child(3) { background: var(--accent-yellow); color: #7C6A00; }
+        .wb-seg:nth-child(4) { background: var(--accent-orange); }
+        .wb-seg:nth-child(5) { background: var(--accent-pink); }
+        .weight-legend { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .8rem; justify-content: center; }
+        .wl-item { display: flex; align-items: center; gap: .4rem; font-size: .8rem; }
+        .wl-dot { width: 10px; height: 10px; border-radius: 3px; }
+        .att-table-wrap { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-top: 1rem; }
+        .att-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+        .att-table thead { background: var(--primary-light); }
+        .att-table th { padding: .8rem 1rem; text-align: left; font-weight: 700; font-size: .82rem; color: var(--primary); border-bottom: 2px solid var(--border); }
+        .att-table td { padding: .75rem 1rem; border-bottom: 1px solid var(--border); }
+        .att-table tr:last-child td { border-bottom: none; }
+        .att-table tr:hover td { background: #FAFBFF; }
+        .att-coeff { display: inline-block; padding: .2rem .6rem; border-radius: 6px; font-weight: 700; font-size: .85rem; min-width: 3em; text-align: center; }
+        .att-coeff.pos { background: #E0F7ED; color: #2D8A5E; }
+        .att-coeff.neutral { background: var(--primary-light); color: var(--primary); }
+        .att-coeff.neg { background: #FFF3E0; color: #E67E22; }
+        .att-coeff.danger { background: #FEE2E2; color: #DC2626; }
+        .att-tag { display: inline-block; font-size: .72rem; font-weight: 600; padding: .15rem .5rem; border-radius: 6px; margin-left: .4rem; }
+        .att-tag.reward { background: #E0F7ED; color: #2D8A5E; }
+        .att-tag.warn { background: #FFF3E0; color: #E67E22; }
+        .att-tag.punish { background: #FEE2E2; color: #DC2626; }
+        .formula-box { background: linear-gradient(135deg, var(--primary-light) 0%, #FFF 100%); border: 2px solid var(--primary); border-radius: 14px; padding: 1.5rem 2rem; text-align: center; margin: 1.5rem 0; }
+        .formula { font-size: 1.15rem; font-weight: 700; color: var(--primary); letter-spacing: .02em; }
+        .formula .op { color: var(--accent-pink); margin: 0 .3rem; }
+        .formula-note { font-size: .82rem; color: var(--text-2); margin-top: .5rem; }
+        .alert-box { background: var(--card); border-radius: var(--radius); padding: 1.2rem 1.5rem; box-shadow: var(--shadow); margin-top: 1.5rem; display: flex; align-items: flex-start; gap: .8rem; border-left: 4px solid var(--accent-orange); }
+        .alert-box.blue { border-left-color: var(--primary); }
+        .alert-box.green { border-left-color: var(--accent-green); }
+        .alert-box.purple { border-left-color: var(--accent-purple); }
+        .alert-box .a-icon { font-size: 1.2rem; flex-shrink: 0; line-height: 1.5; }
+        .alert-box p { font-size: .86rem; color: var(--text-2); }
+        .alert-box strong { color: var(--text); }
+        .sec-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+        footer { text-align: center; padding: 2.5rem 2rem; color: var(--text-2); font-size: .8rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.7rem; } .subj-list, .assess-grid, .advantage-grid { grid-template-columns: 1fr; } nav { padding: 0 1rem; } .container { padding: 0 1rem; } .grade-tabs { gap: .35rem; } .grade-tab { padding: .45rem .9rem; font-size: .82rem; } }
+        @media print { nav { position: static; } .grade-panel { display: block !important; } .subj-mini, .assess-card { break-inside: avoid; opacity: 1 !important; transform: none !important; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } html { scroll-behavior: auto; } }
+        .nav-links a:focus-visible, .lang-btn:focus-visible, .grade-tab:focus-visible, .acc-header:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    </style>
+</head>
+<body>
+<nav>
+    <div class="nav-inner">
+        <span class="nav-brand" data-i18n="nav_brand">SCA 国际高中 IG/AL</span>
+        <div class="nav-links">
+            <a href="#classes" data-i18n="nav_classes">班级与课程</a>
+            <a href="#ihs" data-i18n="nav_ihs">课程过渡</a>
+            <a href="#assess" data-i18n="nav_assess">评估体系</a>
+            <a href="#grading" data-i18n="nav_grading">成绩构成</a>
+        </div>
+        <div class="nav-spacer"></div>
+        <div class="lang-toggle">
+            <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中</button>
+            <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-badge" data-i18n="hero_badge">2026-2027 学年</div>
+    <h1><em data-i18n="hero_t2">课程体系与教学框架</em></h1>
+    <p data-i18n="hero_sub">SCA 国际高中 · IG/AL 方向</p>
+</header>
+
+<main>
+<!-- ==================== 1. 班级与课程 ==================== -->
+<section id="classes">
+    <div class="container">
+        <div class="sec-head">
+            <span class="sec-num">1</span>
+            <h2 class="sec-title" data-i18n="s1_title">班级和课程一览</h2>
+        </div>
+        <p class="sec-sub" data-i18n="s1_sub">按年级查看班级设置、必修/选修科目及教材信息。点击年级标签切换查看。</p>
+
+        <div class="grade-tabs" role="tablist">
+            <button class="grade-tab active" onclick="switchGrade(9)" role="tab" data-i18n="tab_g9">G9 九年级<span class="tab-count">10</span></button>
+            <button class="grade-tab" onclick="switchGrade(10)" role="tab" data-i18n="tab_g10">G10 十年级<span class="tab-count">10</span></button>
+            <button class="grade-tab" onclick="switchGrade(11)" role="tab" data-i18n="tab_g11">G11 十一年级<span class="tab-count">11</span></button>
+            <button class="grade-tab" onclick="switchGrade(12)" role="tab" data-i18n="tab_g12">G12 十二年级</button>
+        </div>
+
+        <!-- G9 -->
+        <div class="grade-panel active" id="panel-9">
+            <div class="class-banner">
+                <span class="cb-icon">🏫</span>
+                <div class="cb-text">
+                    <div class="cb-title" data-i18n="g9_banner_t">9年级 · 2个行政班</div>
+                    <div class="cb-classes"><span class="class-chip">9G1</span><span class="class-chip">9G2</span></div>
+                </div>
+            </div>
+            <div class="subj-list">
+                <div class="subj-mini">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_cn">中文</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">CAIE IGCSE 中文</span></div>
+                </div>
+                <div class="subj-mini t-green">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_math">数学</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">CAIE IGCSE 0580 数学</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_mode">教学</span><span class="val" data-i18n="g9_math_mode">两班合并再分层教学</span></div>
+                    <div class="sm-note"><span class="badge badge-merge" data-i18n="b_merge">合班分层</span></div>
+                </div>
+                <div class="subj-mini t-cyan">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_eng">英语</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE ESL</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_mode">教学</span><span class="val" data-i18n="g9_eng_mode">两班合并再分层教学</span></div>
+                    <div class="sm-note"><span class="badge badge-merge" data-i18n="b_merge">合班分层</span></div>
+                </div>
+                <div class="subj-mini t-orange">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_phy">物理</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Physics</span></div>
+                </div>
+                <div class="subj-mini t-orange">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_chem">化学</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Chemistry</span></div>
+                </div>
+                <div class="subj-mini t-yellow">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_eco">经济</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Economics</span></div>
+                </div>
+                <div class="subj-mini t-green">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_bio">生物</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Biology</span></div>
+                </div>
+                <div class="subj-mini t-pink">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_geo">地理</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Geography</span></div>
+                </div>
+                <div class="subj-mini t-purple">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_art">艺术</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                </div>
+                <div class="subj-mini t-cyan">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g9_pe">体育与健康</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- G10 -->
+        <div class="grade-panel" id="panel-10">
+            <div class="class-banner">
+                <span class="cb-icon">🏫</span>
+                <div class="cb-text">
+                    <div class="cb-title" data-i18n="g10_banner_t">10年级 · 3个班</div>
+                    <div class="cb-classes"><span class="class-chip">10G1</span><span class="class-chip">10G2</span><span class="class-chip">10G3</span></div>
+                </div>
+            </div>
+            <div class="subj-list">
+                <div class="subj-mini">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_cn">中文</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">CAIE IGCSE 中文</span></div>
+                </div>
+                <div class="subj-mini t-green">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_math">数学</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel AS Mathematics</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_mode">教学</span><span class="val" data-i18n="g10_math_mode">分层教学</span></div>
+                    <div class="sm-note"><em data-i18n="g10_math_note">开始学习 AS 数学课程</em></div>
+                </div>
+                <div class="subj-mini t-cyan">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_eng">英语</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_mode">教学</span><span class="val" data-i18n="g10_eng_mode">分层教学</span></div>
+                </div>
+                <div class="subj-mini t-orange">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_phy">物理</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Physics</span></div>
+                </div>
+                <div class="subj-mini t-orange">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_chem">化学</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Chemistry</span></div>
+                </div>
+                <div class="subj-mini t-yellow">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_eco">经济</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Economics</span></div>
+                </div>
+                <div class="subj-mini t-green">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_bio">生物</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Biology</span></div>
+                </div>
+                <div class="subj-mini t-pink">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_geo">地理</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">Edexcel IGCSE Geography</span></div>
+                </div>
+                <div class="subj-mini t-purple">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_art">艺术</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                </div>
+                <div class="subj-mini t-cyan">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g10_pe">体育与健康</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- G11 -->
+        <div class="grade-panel" id="panel-11">
+            <div class="class-banner">
+                <span class="cb-icon">🎓</span>
+                <div class="cb-text">
+                    <div class="cb-title" data-i18n="g11_banner_t">11年级 · 2个行政班（A-Level 阶段）</div>
+                    <div class="cb-desc" data-i18n="g11_banner_d">进入 A-Level 课程体系，选修科目全面展开</div>
+                    <div class="cb-classes"><span class="class-chip">11A1</span><span class="class-chip">11A2</span></div>
+                </div>
+            </div>
+            <div class="subj-list">
+                <div class="subj-mini">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_cn">中文</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_textbook">教材</span><span class="val">CAIE A-Level 9868 中文</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_mode">教学</span><span class="val" data-i18n="g11_cn_mode">按行政班分开上课</span></div>
+                </div>
+                <div class="subj-mini t-green">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_math">数学</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_mode">教学</span><span class="val" data-i18n="g11_math_mode">按学习习惯和能力分层</span></div>
+                    <div class="sm-note">
+                        <strong data-i18n="g11_math_group">A组：</strong><span data-i18n="g11_math_a">从零开始，按 P1→S1→P2 顺序学习</span><br>
+                        <strong data-i18n="g11_math_group_b">B组：</strong><span data-i18n="g11_math_b">跳过 P1，从 P2 开始（适合原 IED 已通过 P1 及 IHS 0606 表现较好的学生）</span>
+                    </div>
+                </div>
+                <div class="subj-mini t-cyan">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_eng">英语</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                    <div class="sm-note" data-i18n="g11_eng_note">分层教学，具体安排请听英语组长 Cecilia 老师的解释和说明。</div>
+                </div>
+                <div class="subj-mini t-orange">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_phy">物理</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_exam_plan">考试</span><span class="val" data-i18n="g11_sci_exam">1月考 U1，6月考 U2U3</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_system">体系</span><span class="val">Edexcel</span></div>
+                </div>
+                <div class="subj-mini t-orange">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_chem">化学</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_exam_plan">考试</span><span class="val" data-i18n="g11_sci_exam">1月考 U1，6月考 U2U3</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_system">体系</span><span class="val">Edexcel</span></div>
+                </div>
+                <div class="subj-mini t-green">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_bio">生物</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_exam_plan">考试</span><span class="val" data-i18n="g11_sci_exam">1月考 U1，6月考 U2U3</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_system">体系</span><span class="val">Edexcel</span></div>
+                </div>
+                <div class="subj-mini t-yellow">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_eco">经济</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_exam_plan">考试</span><span class="val" data-i18n="g11_eco_exam">1月考 U1，6月考 U2</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_system">体系</span><span class="val">Edexcel</span></div>
+                </div>
+                <div class="subj-mini t-pink">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_geo">地理</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_exam_plan">考试</span><span class="val" data-i18n="g11_eco_exam">1月考 U1，6月考 U2</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_system">体系</span><span class="val">Edexcel</span></div>
+                </div>
+                <div class="subj-mini t-cyan">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_cs">计算机</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_system">体系</span><span class="val">Edexcel</span></div>
+                </div>
+                <div class="subj-mini t-purple">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_art">艺术与设计</span><span class="badge badge-elec" data-i18n="b_elec">选修</span></div>
+                    <div class="sm-row"><span class="lbl" data-i18n="lbl_system">体系</span><span class="val">Edexcel</span></div>
+                </div>
+                <div class="subj-mini t-cyan">
+                    <div class="sm-top"><span class="sm-name" data-i18n="g11_pe">体育与健康</span><span class="badge badge-req" data-i18n="b_req">必修</span></div>
+                </div>
+            </div>
+            <div class="alert-box blue" style="margin-top:1.3rem;">
+                <span class="a-icon">📌</span>
+                <p data-i18n="g11_note">G11 AS 课程考试局全面转向 Edexcel。以 1 月作为大考时间节点，在每学期末设定大考和考试目标，减少和分散学生备考压力。</p>
+            </div>
+        </div>
+
+        <!-- G12 -->
+        <div class="grade-panel" id="panel-12">
+            <div class="class-banner">
+                <span class="cb-icon">📋</span>
+                <div class="cb-text">
+                    <div class="cb-title" data-i18n="g12_banner_t">12年级 · 维持原有安排</div>
+                    <div class="cb-desc" data-i18n="g12_banner_d">维持原 Edexcel 学生、CIE 学生的课程设置、老师、及教授节奏不变</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ==================== 2. 课程过渡 ==================== -->
+<section id="ihs">
+    <div class="container">
+        <div class="sec-head">
+            <span class="sec-num">2</span>
+            <h2 class="sec-title" data-i18n="s2_title">原 IHS 学生课程变更说明</h2>
+        </div>
+        <p class="sec-sub" data-i18n="s2_sub">原 IHS 学生在部分课程上作出调整，以下各科目的具体变更安排。</p>
+
+        <div class="accordion">
+            <!-- G10 数学 -->
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    <span class="acc-icon blue">📐</span>
+                    <span class="acc-title" data-i18n="ihs_math_t">G10 数学</span>
+                    <span class="acc-arrow">▼</span>
+                </div>
+                <div class="acc-body">
+                    <div class="acc-body-inner" data-i18n="ihs_math_d">
+                        <p>无论学生原来修读的是 <strong>EM</strong> 还是 <strong>AM</strong> 课程，统一直接开始进行 <strong>Edexcel AS 数学 P1</strong> 的学习。</p>
+                        <p><strong>为什么选择 Edexcel 数学？</strong></p>
+                        <ul>
+                            <li><strong>模块化设计：</strong>Edexcel 数学采用单元模块化考试制度，学生可以分单元备考、分单元重考。不同于 CIE 的线性考试模式（一次考完所有内容），Edexcel 允许学生逐个击破各单元，大幅降低单次考试的知识覆盖量和心理压力。</li>
+                            <li><strong>每年三次考试窗口：</strong>Edexcel 提供 1月、6月、10月 三个考试季，学生每个学期都可以设定明确的考试目标。这种"小步快跑"的节奏让学生始终保持学习动力，避免传统大考模式下"一考定终身"的焦虑。</li>
+                            <li><strong>G10 起步的战略意义：</strong>在 G10 开始 Edexcel AS 数学学习，学生有充足的时间在 G10-G11 两年内从容完成全部数学模块（P1-P4、S1、M1），并在 G12 保留完整重考刷分窗口。相比 G11 才开始学习数学的学生，这一安排多出了一整个考试季的缓冲期。</li>
+                            <li><strong>与 A-Level 无缝衔接：</strong>Edexcel AS 数学直接对接 A2 阶段，课程体系和考试风格完全一致。学生在 G10 建立的模块化学习习惯和考试经验，将直接转化为 A-Level 阶段的竞争优势。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- G9-G11 英语 -->
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    <span class="acc-icon pink">📖</span>
+                    <span class="acc-title" data-i18n="ihs_eng_t">G9 — G11 英语</span>
+                    <span class="acc-arrow">▼</span>
+                </div>
+                <div class="acc-body">
+                    <div class="acc-body-inner" data-i18n="ihs_eng_d">
+                        <p>无论原学生学习的是 <strong>ESL / EFL / Pre-IELTS</strong> 课程，按照年级重新分层进行教学。</p>
+                        <p><span class="highlight">具体安排请等待英语组会议公布</span></p>
+                    </div>
+                </div>
+            </div>
+            <!-- G10 理科/社科 -->
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    <span class="acc-icon green">🔬</span>
+                    <span class="acc-title" data-i18n="ihs_sci_t">G10 物理 / 化学 / 经济 / 生物</span>
+                    <span class="acc-arrow">▼</span>
+                </div>
+                <div class="acc-body">
+                    <div class="acc-body-inner" data-i18n="ihs_sci_d">
+                        <p>G10 学生可继续修读原 G9 学习过的课程，但课程和考试方向<strong>全面转向 Edexcel IGCSE</strong>。</p>
+                        <p>由于原 IED 和原 IHS 学生在选课上有所不同，新学期推荐学生们统一将 <strong>物理、化学、经济</strong> 作为首要学习科目，<span class="highlight">生物 / 地理 二选一</span> 继续学习。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 考试局转向 -->
+            <div class="acc-item">
+                <div class="acc-header" onclick="toggleAcc(this)">
+                    <span class="acc-icon purple">🏛️</span>
+                    <span class="acc-title" data-i18n="ihs_edexcel_t">大部分学科和考试局转向 Edexcel</span>
+                    <span class="acc-arrow">▼</span>
+                </div>
+                <div class="acc-body">
+                    <div class="acc-body-inner" data-i18n="ihs_edexcel_d">
+                        <p>我校大部分学科的课程和考试已全面或逐步转向 <strong>Edexcel（爱德思）考试局</strong>。这一战略决策基于 Edexcel 相比 CIE 等多个考试局的显著优势：</p>
+                        <div class="advantage-grid">
+                            <div class="adv-card">
+                                <div class="adv-icon">📅</div>
+                                <div class="adv-title" data-i18n="adv1_t">每年三次考试机会</div>
+                                <div class="adv-desc" data-i18n="adv1_d">Edexcel 提供 1月、6月、10月 三个考试季，而 CIE 每年仅有 5/6月和 10/11月 两次。多一个考试窗口意味着学生拥有更多的补救和刷分机会，不再"一考定终身"。</div>
+                            </div>
+                            <div class="adv-card">
+                                <div class="adv-icon">🧩</div>
+                                <div class="adv-title" data-i18n="adv2_t">模块化考试制度</div>
+                                <div class="adv-desc" data-i18n="adv2_d">Edexcel IGCSE 和 A-Level 均采用模块化设计（Unit-based），学生可以分单元备考、分单元重考。每次考试只需准备 1-2 个单元的内容，而不是 CIE 线性模式下的全部内容。</div>
+                            </div>
+                            <div class="adv-card">
+                                <div class="adv-icon">🎯</div>
+                                <div class="adv-title" data-i18n="adv3_t">学期目标驱动</div>
+                                <div class="adv-desc" data-i18n="adv3_d">每个学期都可以为学生设定明确的考试目标——"这学期拿下 P1 和 U1"。这种目标感让学习更有方向，也便于教师跟踪每位学生的进度，及时干预和调整教学策略。</div>
+                            </div>
+                            <div class="adv-card">
+                                <div class="adv-icon">😌</div>
+                                <div class="adv-title" data-i18n="adv4_t">分散考试压力</div>
+                                <div class="adv-desc" data-i18n="adv4_d">模块化 + 多考季的制度下，学生每次大考只需应对少量单元，知识覆盖面窄、备考周期短。相比 CIE 一次性考完所有 Paper 的高压模式，Edexcel 的"小考多次"显著降低了学生的心理负担。</div>
+                            </div>
+                            <div class="adv-card">
+                                <div class="adv-icon">📈</div>
+                                <div class="adv-title" data-i18n="adv5_t">灵活的 Cash-in 机制</div>
+                                <div class="adv-desc" data-i18n="adv5_d">Edexcel 支持灵活的 Cash-in（合分）安排，学生可以在最佳时机选择将各单元成绩合并为最终等级。如果某个单元发挥失常，可以单独重考该单元而不影响其他已通过的单元成绩。</div>
+                            </div>
+                            <div class="adv-card">
+                                <div class="adv-icon">🌍</div>
+                                <div class="adv-title" data-i18n="adv6_t">全球认可度高</div>
+                                <div class="adv-desc" data-i18n="adv6_d">Edexcel 是英国最大的考试局，其 A-Level 成绩被全球大学广泛认可。模块化考试的透明评分标准（UMS 统一标度分）让大学招生官能更清晰地评估学生能力。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ==================== 3. 教学评估 ==================== -->
+<section id="assess">
+    <div class="container">
+        <div class="sec-head">
+            <span class="sec-num">3</span>
+            <h2 class="sec-title" data-i18n="s3_title">校内学术考核体系</h2>
+        </div>
+        <p class="sec-sub" data-i18n="s3_sub">校内学术考核分为五个部分，形成从日常到期末的完整评估链条。点击卡片查看详情。</p>
+        <div class="assess-grid">
+            <div class="assess-card" onclick="toggleAssessDetail(this)">
+                <div class="ac-icon">📝</div>
+                <div class="ac-name" data-i18n="a1_name">作业</div>
+                <div class="ac-en">Homework</div>
+                <div class="ac-weight w10">10%</div>
+                <div class="ac-desc" data-i18n="a1_desc">巩固课堂所学，培养独立学习能力。由各学科主讲教师设计布置，形式包括书面练习、阅读报告、项目设计等。未交作业按 0% 计入，认真完成保底 20%。</div>
+            </div>
+            <div class="assess-card" onclick="toggleAssessDetail(this)">
+                <div class="ac-icon">⚡</div>
+                <div class="ac-name" data-i18n="a2_name">周测</div>
+                <div class="ac-en">Quiz</div>
+                <div class="ac-weight w10">10%</div>
+                <div class="ac-desc" data-i18n="a2_desc">形成性评估，30 分钟以内，以客观题与短答题为主。检测近 1-2 周教学单元核心知识，缺考须安排补考。</div>
+            </div>
+            <div class="assess-card" onclick="toggleAssessDetail(this)">
+                <div class="ac-icon">📊</div>
+                <div class="ac-name" data-i18n="a3_name">月考</div>
+                <div class="ac-en">Mock</div>
+                <div class="ac-weight w20">20%</div>
+                <div class="ac-desc" data-i18n="a3_desc">阶段性综合评估，由学科组长统筹组织。多次月考按大考 Paper 权重取值或取算术平均值。月考成绩在特定年级具有重要决策作用。</div>
+            </div>
+            <div class="assess-card" onclick="toggleAssessDetail(this)">
+                <div class="ac-icon">📋</div>
+                <div class="ac-name" data-i18n="a4_name">期中考试</div>
+                <div class="ac-en">Midterm Exam</div>
+                <div class="ac-weight w30">30%</div>
+                <div class="ac-desc" data-i18n="a4_desc">阶段性综合考查，密封流水阅卷，原始分由教务处统一转换为标准化分及成绩等级。</div>
+            </div>
+            <div class="assess-card" onclick="toggleAssessDetail(this)">
+                <div class="ac-icon">🎯</div>
+                <div class="ac-name" data-i18n="a5_name">期末考试</div>
+                <div class="ac-en">Final Exam</div>
+                <div class="ac-weight w30">30%</div>
+                <div class="ac-desc" data-i18n="a5_desc">学期全面考查，统一命题确保覆盖面广、难度梯度合理。密封流水阅卷，转换为标准化分用于成绩报告。</div>
+            </div>
+        </div>
+        <div class="alert-box green" style="margin-top:1.5rem;">
+            <span class="a-icon">💡</span>
+            <p data-i18n="hw_special"><strong>作业特别说明：</strong>学生完全未完成作业或拒不上交的，作业成绩按 <strong>0%</strong> 计入；学生认真完成作业、学习态度积极的，作业成绩保底按 <strong>20%</strong> 计入。</p>
+        </div>
+    </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ==================== 4. 成绩构成 ==================== -->
+<section id="grading" style="background:#fff;">
+    <div class="container">
+        <div class="sec-head">
+            <span class="sec-num">4</span>
+            <h2 class="sec-title" data-i18n="s4_title">学期总评成绩构成</h2>
+        </div>
+        <p class="sec-sub" data-i18n="s4_sub">学期总评成绩由学术考核部分与出勤调节两部分共同决定。</p>
+        <div class="formula-box">
+            <div class="formula">
+                <span data-i18n="f_total">学期总评成绩</span>
+                <span class="op">=</span>
+                <span data-i18n="f_academic">学术考核总分</span>
+                <span class="op">×</span>
+                <span data-i18n="f_attend">出勤调节系数</span>
+            </div>
+            <div class="formula-note" data-i18n="f_note">出勤调节系数是一个乘数，旨在强调出勤的重要性</div>
+        </div>
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:.8rem;" data-i18n="weight_title">学术考核权重分配</h3>
+        <div class="weight-bar-wrap">
+            <div class="weight-bar">
+                <div class="wb-seg" style="flex:10;" data-i18n="wb_hw">作业 10%</div>
+                <div class="wb-seg" style="flex:10;" data-i18n="wb_quiz">周测 10%</div>
+                <div class="wb-seg" style="flex:20;" data-i18n="wb_mock">月考 20%</div>
+                <div class="wb-seg" style="flex:30;" data-i18n="wb_mid">期中 30%</div>
+                <div class="wb-seg" style="flex:30;" data-i18n="wb_final">期末 30%</div>
+            </div>
+            <div class="weight-legend">
+                <span class="wl-item"><span class="wl-dot" style="background:var(--accent-cyan)"></span><span data-i18n="wl_hw">作业 10%</span></span>
+                <span class="wl-item"><span class="wl-dot" style="background:var(--accent-green)"></span><span data-i18n="wl_quiz">周测 10%</span></span>
+                <span class="wl-item"><span class="wl-dot" style="background:var(--accent-yellow)"></span><span data-i18n="wl_mock">月考 20%</span></span>
+                <span class="wl-item"><span class="wl-dot" style="background:var(--accent-orange)"></span><span data-i18n="wl_mid">期中 30%</span></span>
+                <span class="wl-item"><span class="wl-dot" style="background:var(--accent-pink)"></span><span data-i18n="wl_final">期末 30%</span></span>
+            </div>
+        </div>
+        <h3 style="font-size:1rem; font-weight:700; margin:1.5rem 0 .5rem;" data-i18n="att_title">出勤调节系数</h3>
+        <div class="att-table-wrap">
+            <table class="att-table">
+                <thead><tr><th data-i18n="th_rate">出勤率 (P)</th><th data-i18n="th_coeff">出勤系数</th><th data-i18n="th_effect">说明</th></tr></thead>
+                <tbody>
+                    <tr><td>95% – 100%</td><td><span class="att-coeff pos">1.05</span><span class="att-tag reward" data-i18n="tag_reward">奖励</span></td><td data-i18n="att_95">奖励性乘数，表彰全勤或近乎全勤的学生（最终总分不超过 100%）</td></tr>
+                    <tr><td>90% – 95%</td><td><span class="att-coeff neutral">1.0</span></td><td data-i18n="att_90">无影响，此为学校期望的基准出勤率</td></tr>
+                    <tr><td>85% – 90%</td><td><span class="att-coeff neg">0.95</span><span class="att-tag warn" data-i18n="tag_warn">警示</span></td><td data-i18n="att_85">警示性折扣，略低于基准，成绩受到小幅扣减</td></tr>
+                    <tr><td>80% – 85%</td><td><span class="att-coeff neg">0.9</span><span class="att-tag warn" data-i18n="tag_warn2">惩罚</span></td><td data-i18n="att_80">惩罚性折扣，出勤问题明显，学术成绩将受到显著影响</td></tr>
+                    <tr><td data-i18n="att_below80">&lt; 80%</td><td><span class="att-coeff danger">0.8</span><span class="att-tag punish" data-i18n="tag_danger">严重</span></td><td data-i18n="att_below80_d">严重惩罚性折扣，可能触及学业警告或取消大考资格</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="alert-box" style="margin-top:1.3rem;">
+            <span class="a-icon">⚙️</span>
+            <p data-i18n="grade_convert"><strong>成绩等级转换：</strong>期中考试与期末考试的原始分，由教务处依据《学术手册》中规定的"期中期末考试等级与分数转换方法"进行统一转换。转换后的标准化分及对应的成绩等级为考试的最终成绩，用于学生成绩报告。出勤数据通过系统记录。</p>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer><p data-i18n="footer">SCA 国际高中 · IG/AL 方向 · 2026-2027 学年</p></footer>
+
+<script>
+const T = {
+zh: {
+nav_brand: 'SCA 国际高中 IG/AL', nav_classes: '班级与课程', nav_ihs: '课程过渡', nav_assess: '评估体系', nav_grading: '成绩构成',
+hero_badge: '2026-2027 学年', hero_t2: '课程体系与教学框架', hero_sub: 'SCA 国际高中 · IG/AL 方向',
+s1_title: '班级和课程一览', s1_sub: '按年级查看班级设置、必修/选修科目及教材信息。点击年级标签切换查看。',
+tab_g9: 'G9 九年级<span class="tab-count">10</span>', tab_g10: 'G10 十年级<span class="tab-count">10</span>', tab_g11: 'G11 十一年级<span class="tab-count">11</span>', tab_g12: 'G12 十二年级',
+g9_banner_t: '9年级 · 2个行政班', g9_banner_d: '',
+g9_cn: '中文', g9_math: '数学', g9_eng: '英语', g9_phy: '物理', g9_chem: '化学', g9_eco: '经济', g9_bio: '生物', g9_geo: '地理', g9_art: '艺术', g9_pe: '体育与健康',
+g9_math_mode: '两班合并再分层教学', g9_eng_mode: '两班合并再分层教学',
+g10_banner_t: '10年级 · 3个班', g10_banner_d: '',
+g10_cn: '中文', g10_math: '数学', g10_eng: '英语', g10_phy: '物理', g10_chem: '化学', g10_eco: '经济', g10_bio: '生物', g10_geo: '地理', g10_art: '艺术', g10_pe: '体育与健康',
+g10_math_mode: '分层教学', g10_eng_mode: '分层教学', g10_math_note: '开始学习 AS 数学课程',
+g11_banner_t: '11年级 · 2个行政班（A-Level 阶段）', g11_banner_d: '进入 A-Level 课程体系，选修科目全面展开',
+g11_cn: '中文', g11_math: '数学', g11_eng: '英语', g11_phy: '物理', g11_chem: '化学', g11_bio: '生物', g11_eco: '经济', g11_geo: '地理', g11_cs: '计算机', g11_art: '艺术与设计', g11_pe: '体育与健康',
+g11_cn_mode: '按行政班分开上课', g11_math_mode: '按学习习惯和能力分层',
+g11_math_group: 'A组：', g11_math_a: '从零开始，按 P1→S1→P2 顺序学习',
+g11_math_group_b: 'B组：', g11_math_b: '跳过 P1，从 P2 开始（适合原 IED 已通过 P1 及 IHS 0606 表现较好的学生）',
+g11_eng_note: '分层教学，具体安排请听英语组长 Cecilia 老师的解释和说明。',
+g11_sci_exam: '1月考 U1，6月考 U2U3', g11_eco_exam: '1月考 U1，6月考 U2',
+g11_note: 'G11 AS 课程考试局全面转向 Edexcel。以 1 月作为大考时间节点，在每学期末设定大考和考试目标，减少和分散学生备考压力。',
+g12_banner_t: '12年级 · 维持原有安排', g12_banner_d: '维持原 Edexcel 学生、CIE 学生的课程设置、老师、及教授节奏不变', g12_pe: '体育与健康',
+b_req: '必修', b_elec: '选修', b_merge: '合班分层',
+lbl_textbook: '教材', lbl_mode: '教学', lbl_exam_plan: '考试', lbl_system: '体系',
+s2_title: '原 IHS 学生课程变更说明', s2_sub: '原 IHS 学生在部分课程上作出调整，以下各科目的具体变更安排。',
+ihs_math_t: 'G10 数学',
+ihs_math_d: '<p>无论学生原来修读的是 <strong>EM</strong> 还是 <strong>AM</strong> 课程，统一直接开始进行 <strong>Edexcel AS 数学 P1</strong> 的学习。</p><p><strong>为什么选择 Edexcel 数学？</strong></p><ul><li><strong>模块化设计：</strong>Edexcel 数学采用单元模块化考试制度，学生可以分单元备考、分单元重考。不同于 CIE 的线性考试模式（一次考完所有内容），Edexcel 允许学生逐个击破各单元，大幅降低单次考试的知识覆盖量和心理压力。</li><li><strong>每年三次考试窗口：</strong>Edexcel 提供 1月、6月、10月 三个考试季，学生每个学期都可以设定明确的考试目标。这种"小步快跑"的节奏让学生始终保持学习动力，避免传统大考模式下"一考定终身"的焦虑。</li><li><strong>G10 起步的战略意义：</strong>在 G10 开始 Edexcel AS 数学学习，学生有充足的时间在 G10-G11 两年内从容完成全部数学模块（P1-P4、S1、M1），并在 G12 保留完整重考刷分窗口。相比 G11 才开始学习数学的学生，这一安排多出了一整个考试季的缓冲期。</li><li><strong>与 A-Level 无缝衔接：</strong>Edexcel AS 数学直接对接 A2 阶段，课程体系和考试风格完全一致。学生在 G10 建立的模块化学习习惯和考试经验，将直接转化为 A-Level 阶段的竞争优势。</li></ul>',
+ihs_eng_t: 'G9 — G11 英语',
+ihs_eng_d: '<p>无论原学生学习的是 <strong>ESL / EFL / Pre-IELTS</strong> 课程，按照年级重新分层进行教学。</p><p><span class="highlight">具体安排请等待英语组会议公布</span></p>',
+ihs_sci_t: 'G10 物理 / 化学 / 经济 / 生物',
+ihs_sci_d: '<p>G10 学生可继续修读原 G9 学习过的课程，但课程和考试方向<strong>全面转向 Edexcel IGCSE</strong>。</p><p>由于原 IED 和原 IHS 学生在选课上有所不同，新学期推荐学生们统一将 <strong>物理、化学、经济</strong> 作为首要学习科目，<span class="highlight">生物 / 地理 二选一</span> 继续学习。</p>',
+ihs_edexcel_t: '大部分学科和考试局转向 Edexcel',
+ihs_edexcel_d: '<p>我校大部分学科的课程和考试已全面或逐步转向 <strong>Edexcel（爱德思）考试局</strong>。这一战略决策基于 Edexcel 相比 CIE 等多个考试局的显著优势：</p><div class="advantage-grid"><div class="adv-card"><div class="adv-icon">📅</div><div class="adv-title">每年三次考试机会</div><div class="adv-desc">Edexcel 提供 1月、6月、10月 三个考试季，而 CIE 每年仅有 5/6月和 10/11月 两次。多一个考试窗口意味着学生拥有更多的补救和刷分机会，不再"一考定终身"。</div></div><div class="adv-card"><div class="adv-icon">🧩</div><div class="adv-title">模块化考试制度</div><div class="adv-desc">Edexcel IGCSE 和 A-Level 均采用模块化设计（Unit-based），学生可以分单元备考、分单元重考。每次考试只需准备 1-2 个单元的内容，而不是 CIE 线性模式下的全部内容。</div></div><div class="adv-card"><div class="adv-icon">🎯</div><div class="adv-title">学期目标驱动</div><div class="adv-desc">每个学期都可以为学生设定明确的考试目标——"这学期拿下 P1 和 U1"。这种目标感让学习更有方向，也便于教师跟踪每位学生的进度，及时干预和调整教学策略。</div></div><div class="adv-card"><div class="adv-icon">😌</div><div class="adv-title">分散考试压力</div><div class="adv-desc">模块化 + 多考季的制度下，学生每次大考只需应对少量单元，知识覆盖面窄、备考周期短。相比 CIE 一次性考完所有 Paper 的高压模式，Edexcel 的"小考多次"显著降低了学生的心理负担。</div></div><div class="adv-card"><div class="adv-icon">📈</div><div class="adv-title">灵活的 Cash-in 机制</div><div class="adv-desc">Edexcel 支持灵活的 Cash-in（合分）安排，学生可以在最佳时机选择将各单元成绩合并为最终等级。如果某个单元发挥失常，可以单独重考该单元而不影响其他已通过的单元成绩。</div></div><div class="adv-card"><div class="adv-icon">🌍</div><div class="adv-title">全球认可度高</div><div class="adv-desc">Edexcel 是英国最大的考试局，其 A-Level 成绩被全球大学广泛认可。模块化考试的透明评分标准（UMS 统一标度分）让大学招生官能更清晰地评估学生能力。</div></div></div>',
+adv1_t: '每年三次考试机会', adv1_d: 'Edexcel 提供 1月、6月、10月 三个考试季，而 CIE 每年仅有 5/6月和 10/11月 两次。多一个考试窗口意味着学生拥有更多的补救和刷分机会，不再"一考定终身"。',
+adv2_t: '模块化考试制度', adv2_d: 'Edexcel IGCSE 和 A-Level 均采用模块化设计（Unit-based），学生可以分单元备考、分单元重考。每次考试只需准备 1-2 个单元的内容，而不是 CIE 线性模式下的全部内容。',
+adv3_t: '学期目标驱动', adv3_d: '每个学期都可以为学生设定明确的考试目标——"这学期拿下 P1 和 U1"。这种目标感让学习更有方向，也便于教师跟踪每位学生的进度，及时干预和调整教学策略。',
+adv4_t: '分散考试压力', adv4_d: '模块化 + 多考季的制度下，学生每次大考只需应对少量单元，知识覆盖面窄、备考周期短。相比 CIE 一次性考完所有 Paper 的高压模式，Edexcel 的"小考多次"显著降低了学生的心理负担。',
+adv5_t: '灵活的 Cash-in 机制', adv5_d: 'Edexcel 支持灵活的 Cash-in（合分）安排，学生可以在最佳时机选择将各单元成绩合并为最终等级。如果某个单元发挥失常，可以单独重考该单元而不影响其他已通过的单元成绩。',
+adv6_t: '全球认可度高', adv6_d: 'Edexcel 是英国最大的考试局，其 A-Level 成绩被全球大学广泛认可。模块化考试的透明评分标准（UMS 统一标度分）让大学招生官能更清晰地评估学生能力。',
+s3_title: '校内学术考核体系', s3_sub: '校内学术考核分为五个部分，形成从日常到期末的完整评估链条。点击卡片查看详情。',
+a1_name: '作业', a1_desc: '巩固课堂所学，培养独立学习能力。由各学科主讲教师设计布置，形式包括书面练习、阅读报告、项目设计等。未交作业按 0% 计入，认真完成保底 20%。',
+a2_name: '周测', a2_desc: '形成性评估，30 分钟以内，以客观题与短答题为主。检测近 1-2 周教学单元核心知识，缺考须安排补考。',
+a3_name: '月考', a3_desc: '阶段性综合评估，由学科组长统筹组织。多次月考按大考 Paper 权重取值或取算术平均值。月考成绩在特定年级具有重要决策作用。',
+a4_name: '期中考试', a4_desc: '阶段性综合考查，密封流水阅卷，原始分由教务处统一转换为标准化分及成绩等级。',
+a5_name: '期末考试', a5_desc: '学期全面考查，统一命题确保覆盖面广、难度梯度合理。密封流水阅卷，转换为标准化分用于成绩报告。',
+hw_special: '<strong>作业特别说明：</strong>学生完全未完成作业或拒不上交的，作业成绩按 <strong>0%</strong> 计入；学生认真完成作业、学习态度积极的，作业成绩保底按 <strong>20%</strong> 计入。',
+s4_title: '学期总评成绩构成', s4_sub: '学期总评成绩由学术考核部分与出勤调节两部分共同决定。',
+f_total: '学期总评成绩', f_academic: '学术考核总分', f_attend: '出勤调节系数', f_note: '出勤调节系数是一个乘数，旨在强调出勤的重要性',
+weight_title: '学术考核权重分配',
+wb_hw: '作业 10%', wb_quiz: '周测 10%', wb_mock: '月考 20%', wb_mid: '期中 30%', wb_final: '期末 30%',
+wl_hw: '作业 10%', wl_quiz: '周测 10%', wl_mock: '月考 20%', wl_mid: '期中 30%', wl_final: '期末 30%',
+att_title: '出勤调节系数', th_rate: '出勤率 (P)', th_coeff: '出勤系数', th_effect: '说明',
+att_95: '奖励性乘数，表彰全勤或近乎全勤的学生（最终总分不超过 100%）', att_90: '无影响，此为学校期望的基准出勤率',
+att_85: '警示性折扣，略低于基准，成绩受到小幅扣减', att_80: '惩罚性折扣，出勤问题明显，学术成绩将受到显著影响',
+att_below80: '< 80%', att_below80_d: '严重惩罚性折扣，可能触及学业警告或取消大考资格',
+tag_reward: '奖励', tag_warn: '警示', tag_warn2: '惩罚', tag_danger: '严重',
+grade_convert: '<strong>成绩等级转换：</strong>期中考试与期末考试的原始分，由教务处依据《学术手册》中规定的"期中期末考试等级与分数转换方法"进行统一转换。转换后的标准化分及对应的成绩等级为考试的最终成绩，用于学生成绩报告。出勤数据通过系统记录。',
+footer: 'SCA 国际高中 · IG/AL 方向 · 2026-2027 学年'
+},
+en: {
+nav_brand: 'SCA Intl High IG/AL', nav_classes: 'Classes', nav_ihs: 'Transitions', nav_assess: 'Assessment', nav_grading: 'Grading',
+hero_badge: 'Academic Year 2026-2027', hero_t2: 'Curriculum Framework & Teaching Structure', hero_sub: 'SCA International High School · IG/AL Track',
+s1_title: 'Classes & Curriculum Overview', s1_sub: 'View class setup, core/elective subjects, and textbooks by grade. Click the grade tabs to switch.',
+tab_g9: 'G9<span class="tab-count">10</span>', tab_g10: 'G10<span class="tab-count">10</span>', tab_g11: 'G11<span class="tab-count">11</span>', tab_g12: 'G12',
+g9_banner_t: 'Grade 9 · 2 Form Classes', g9_banner_d: '',
+g9_cn: 'Chinese', g9_math: 'Mathematics', g9_eng: 'English', g9_phy: 'Physics', g9_chem: 'Chemistry', g9_eco: 'Economics', g9_bio: 'Biology', g9_geo: 'Geography', g9_art: 'Art', g9_pe: 'PE & Health',
+g9_math_mode: 'Combined classes, differentiated', g9_eng_mode: 'Combined classes, differentiated',
+g10_banner_t: 'Grade 10 · 3 Classes', g10_banner_d: '',
+g10_cn: 'Chinese', g10_math: 'Mathematics', g10_eng: 'English', g10_phy: 'Physics', g10_chem: 'Chemistry', g10_eco: 'Economics', g10_bio: 'Biology', g10_geo: 'Geography', g10_art: 'Art', g10_pe: 'PE & Health',
+g10_math_mode: 'Differentiated teaching', g10_eng_mode: 'Differentiated teaching', g10_math_note: 'Students begin AS Mathematics',
+g11_banner_t: 'Grade 11 · 2 Form Classes (A-Level Stage)', g11_banner_d: 'Entering A-Level curriculum with all electives in full swing',
+g11_cn: 'Chinese', g11_math: 'Mathematics', g11_eng: 'English', g11_phy: 'Physics', g11_chem: 'Chemistry', g11_bio: 'Biology', g11_eco: 'Economics', g11_geo: 'Geography', g11_cs: 'Computer Science', g11_art: 'Art & Design', g11_pe: 'PE & Health',
+g11_cn_mode: 'Separated by form class', g11_math_mode: 'Grouped by study habits & ability',
+g11_math_group: 'Group A: ', g11_math_a: 'Start from scratch, follow P1→S1→P2 sequence',
+g11_math_group_b: 'Group B: ', g11_math_b: 'Skip P1, start from P2 (for former IED students who passed P1, and IHS students with strong 0606 performance)',
+g11_eng_note: 'Differentiated teaching. Please refer to Cecilia, Head of English, for detailed arrangements.',
+g11_sci_exam: 'Jan: U1, Jun: U2 & U3', g11_eco_exam: 'Jan: U1, Jun: U2',
+g11_note: 'G11 AS courses fully transition to Edexcel. January is set as the main exam checkpoint, with exam targets set at the end of each semester to reduce and distribute student exam pressure.',
+g12_banner_t: 'Grade 12 · Maintain Current Arrangements', g12_banner_d: 'Maintain existing Edexcel and CIE student curriculum, teachers, and teaching pace', g12_pe: 'PE & Health',
+b_req: 'Core', b_elec: 'Elective', b_merge: 'Combined & differentiated',
+lbl_textbook: 'Textbook', lbl_mode: 'Mode', lbl_exam_plan: 'Exam', lbl_system: 'Board',
+s2_title: 'Former IHS Student Transition', s2_sub: 'Specific adjustments for former IHS students across subjects.',
+ihs_math_t: 'G10 Mathematics',
+ihs_math_d: '<p>Regardless of whether students were in <strong>EM</strong> or <strong>AM</strong>, they will directly begin <strong>Edexcel AS Mathematics P1</strong>.</p><p><strong>Why Edexcel Mathematics?</strong></p><ul><li><strong>Modular Design:</strong> Edexcel uses a unit-based modular exam system. Students can prepare for and retake individual units. Unlike CIE\'s linear model (all content in one exam), Edexcel allows students to tackle units one at a time, greatly reducing the knowledge load per sitting.</li><li><strong>Three Exam Windows Per Year:</strong> Edexcel offers January, June, and October exam sessions. Students can set clear targets each semester. This steady-pace approach keeps motivation high and avoids the "all-or-nothing" anxiety of traditional exam models.</li><li><strong>Strategic G10 Start:</strong> Beginning Edexcel AS Maths in G10 gives students ample time across G10-G11 to complete all modules (P1-P4, S1, M1), with a full retake window preserved in G12. This provides one extra exam season of buffer compared to students who start in G11.</li><li><strong>Seamless A-Level Progression:</strong> Edexcel AS Maths directly feeds into A2 with identical curriculum structure and exam style. The modular study habits built in G10 directly translate into competitive advantage at A-Level.</li></ul>',
+ihs_eng_t: 'G9 — G11 English',
+ihs_eng_d: '<p>Regardless of whether students studied <strong>ESL / EFL / Pre-IELTS</strong>, they will be regrouped by grade level for differentiated teaching.</p><p><span class="highlight">Specific arrangements pending English Department meeting</span></p>',
+ihs_sci_t: 'G10 Physics / Chemistry / Economics / Biology',
+ihs_sci_d: '<p>G10 students may continue subjects studied in G9, but curriculum and exam direction <strong>fully transition to Edexcel IGCSE</strong>.</p><p>Due to differences in elective choices between former IED and IHS students, the new semester recommends <strong>Physics, Chemistry, and Economics</strong> as primary subjects, with <span class="highlight">Biology / Geography — choose one</span> to continue.</p>',
+ihs_edexcel_t: 'Transition to Edexcel Examination Board',
+ihs_edexcel_d: '<p>Most of our subjects have fully or progressively transitioned to the <strong>Edexcel examination board</strong>. This strategic decision is based on Edexcel\'s significant advantages over CIE and other boards:</p><div class="advantage-grid"><div class="adv-card"><div class="adv-icon">📅</div><div class="adv-title">Three Exam Sessions Per Year</div><div class="adv-desc">Edexcel offers January, June, and October sessions, while CIE only has two (May/Jun and Oct/Nov). More windows mean more retake opportunities — no more "one exam defines everything."</div></div><div class="adv-card"><div class="adv-icon">🧩</div><div class="adv-title">Modular Exam System</div><div class="adv-desc">Both IGCSE and A-Level use unit-based modular design. Students prepare and retake individual units rather than all content at once in CIE\'s linear format.</div></div><div class="adv-card"><div class="adv-icon">🎯</div><div class="adv-title">Semester Goal-Driven</div><div class="adv-desc">Each semester can have clear exam targets — "take P1 and U1 this term." This goal-oriented approach gives learning direction and helps teachers track progress and adjust strategies.</div></div><div class="adv-card"><div class="adv-icon">😌</div><div class="adv-title">Distributed Exam Pressure</div><div class="adv-desc">With modular + multi-session structure, each exam covers fewer units with shorter prep cycles. Compared to CIE\'s high-pressure "all papers at once," Edexcel\'s "small exams, many times" significantly reduces student stress.</div></div><div class="adv-card"><div class="adv-icon">📈</div><div class="adv-title">Flexible Cash-in</div><div class="adv-desc">Edexcel supports flexible Cash-in arrangements — students can merge unit grades at the optimal time. If one unit underperforms, only that unit needs retaking without affecting other passed units.</div></div><div class="adv-card"><div class="adv-icon">🌍</div><div class="adv-title">Global Recognition</div><div class="adv-desc">Edexcel is the UK\'s largest exam board. Its A-Level results are widely recognized by universities worldwide. Transparent UMS scoring gives admissions officers clearer insight into student ability.</div></div></div>',
+adv1_t: 'Three Exam Sessions/Year', adv1_d: 'Edexcel offers Jan, Jun, Oct — CIE only has two. More windows = more retake chances.',
+adv2_t: 'Modular System', adv2_d: 'Unit-based: prepare and retake individual units, not all content at once.',
+adv3_t: 'Semester Goals', adv3_d: 'Clear targets each semester keep learning focused and progress trackable.',
+adv4_t: 'Reduced Pressure', adv4_d: 'Fewer units per exam, shorter prep — "small exams, many times" beats all-at-once.',
+adv5_t: 'Flexible Cash-in', adv5_d: 'Merge unit grades at the best time; retake only what underperformed.',
+adv6_t: 'Global Recognition', adv6_d: 'UK\'s largest board, transparent UMS scoring, worldwide university acceptance.',
+s3_title: 'Internal Academic Assessment System', s3_sub: 'Five components form a complete assessment chain from daily work to final exams. Click cards for details.',
+a1_name: 'Homework', a1_desc: 'Reinforces classroom learning. Designed by subject teachers. Unsubmitted: 0%; completed: minimum 20%.',
+a2_name: 'Quiz', a2_desc: 'Formative assessment within 30 min. Objective + short-answer. Covers 1-2 weeks. Make-ups required for absences.',
+a3_name: 'Mock Exam', a3_desc: 'Stage-based assessment by department heads. Weighted by paper allocation or averaged. Key for grade-level decisions.',
+a4_name: 'Midterm Exam', a4_desc: 'Stage-based comprehensive exam. Sealed cross-marking. Standardized scores by Academic Affairs.',
+a5_name: 'Final Exam', a5_desc: 'Full semester coverage. Sealed cross-marking with standardized reporting.',
+hw_special: '<strong>Homework Policy:</strong> Unsubmitted work: <strong>0%</strong>. Diligent work: minimum <strong>20%</strong>.',
+s4_title: 'Overall Semester Score Composition', s4_sub: 'The overall semester score is determined by academic scores and attendance adjustment.',
+f_total: 'Overall Semester Score', f_academic: 'Academic Score', f_attend: 'Attendance Coeff.', f_note: 'The attendance coefficient emphasizes the importance of attendance',
+weight_title: 'Academic Weight Distribution',
+wb_hw: 'HW 10%', wb_quiz: 'Quiz 10%', wb_mock: 'Mock 20%', wb_mid: 'Mid 30%', wb_final: 'Final 30%',
+wl_hw: 'Homework 10%', wl_quiz: 'Quiz 10%', wl_mock: 'Mock 20%', wl_mid: 'Midterm 30%', wl_final: 'Final 30%',
+att_title: 'Attendance Coefficient', th_rate: 'Attendance Rate (P)', th_coeff: 'Coefficient', th_effect: 'Description',
+att_95: 'Reward multiplier for near-perfect attendance (capped at 100%)', att_90: 'No effect — baseline attendance rate',
+att_85: 'Warning discount — minor score deduction', att_80: 'Penalty discount — notable score reduction',
+att_below80: '< 80%', att_below80_d: 'Severe penalty — may trigger academic warning or exam disqualification',
+tag_reward: 'Reward', tag_warn: 'Warning', tag_warn2: 'Penalty', tag_danger: 'Severe',
+grade_convert: '<strong>Grade Conversion:</strong> Raw scores converted by Academic Affairs per the Academic Handbook. Standardized scores are final results for reports. Attendance via school system.',
+footer: 'SCA International High School · IG/AL Track · 2026-2027'
+}
+};
+let currentLang = 'zh';
+function setLang(lang) {
+    currentLang = lang;
+    document.body.classList.toggle('en', lang === 'en');
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    const dict = T[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (dict[key] !== undefined) el.innerHTML = dict[key]; });
+}
+function switchGrade(g) {
+    document.querySelectorAll('.grade-tab').forEach((t, i) => { t.classList.toggle('active', [9,10,11,12][i] === g); });
+    document.querySelectorAll('.grade-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('panel-' + g);
+    if (panel) { panel.classList.add('active'); panel.querySelectorAll('.subj-mini').forEach(c => c.classList.remove('show')); setTimeout(() => observeCards(panel), 50); }
+}
+function toggleAcc(header) {
+    const item = header.parentElement; const body = item.querySelector('.acc-body');
+    if (item.classList.contains('open')) { body.style.maxHeight = '0'; item.classList.remove('open'); }
+    else { body.style.maxHeight = body.scrollHeight + 'px'; item.classList.add('open'); }
+}
+function toggleAssessDetail(card) {
+    const desc = card.querySelector('.ac-desc');
+    if (desc.style.maxHeight && desc.style.maxHeight !== '3.1em') { desc.style.maxHeight = '3.1em'; desc.style.overflow = 'hidden'; }
+    else { desc.style.maxHeight = '20em'; desc.style.overflow = 'visible'; }
+}
+function observeCards(scope) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => { if (entry.isIntersecting) { setTimeout(() => entry.target.classList.add('show'), i * 60); observer.unobserve(entry.target); } });
+    }, { threshold: 0.1 });
+    scope.querySelectorAll('.subj-mini:not(.show)').forEach(el => observer.observe(el));
+}
+document.addEventListener('DOMContentLoaded', () => {
+    observeCards(document);
+    document.querySelectorAll('.ac-desc').forEach(d => { d.style.maxHeight = '3.1em'; d.style.overflow = 'hidden'; d.style.transition = 'max-height .3s ease'; });
+});
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', e => { e.preventDefault(); const target = document.querySelector(link.getAttribute('href')); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+});
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => { if (window.scrollY >= sec.offsetTop - 120) current = sec.id; });
+    navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
+});
+</script>
+</body>
+</html>
