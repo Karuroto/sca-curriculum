@@ -1,0 +1,915 @@
+
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>行政班级月考成绩分析 · 广州SCA国际学校</title>
+<style>
+:root{--bg:#f5f3ee;--surface:#fff;--ink:#232019;--muted:#7a746a;--line:#e5e0d5;
+--g9:#0b6a4d;--g8:#2f8f5b;--g7:#7fae4a;--g6:#e0c341;--g5:#eea63a;--g4:#e07b2e;--g2:#c8452f;
+--ok:#0b6a4d;--mid:#b7791f;--warn:#c8452f;--sys:#6b5d43;
+--accent:#7a3e1d;--accent-ink:#fff;}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;}
+header{background:var(--surface);border-bottom:1px solid var(--line);padding:16px clamp(16px,4vw,48px);position:sticky;top:0;z-index:20;}
+.hdrbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.htext h1{margin:0;font-size:clamp(19px,2.6vw,24px);line-height:1.3;}
+.htext p{margin:2px 0 0;color:var(--muted);font-size:13px;}
+.navdd{position:relative;}
+.navdd summary{list-style:none;cursor:pointer;background:var(--accent);color:var(--accent-ink);
+  padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;user-select:none;white-space:nowrap;}
+.navdd summary::-webkit-details-marker{display:none;}
+.navdd summary:hover{filter:brightness(1.08);}
+.navdd nav#idx{display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:320px;max-width:min(88vw,680px);
+  max-height:70vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 12px 32px rgba(0,0,0,.14);padding:14px;gap:8px;flex-direction:column;z-index:30;}
+.navdd[open] nav#idx{display:flex;}
+.navrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.navrow b{color:var(--sys);font-size:13px;font-weight:700;margin-right:2px;min-width:52px;}
+a.idx{text-decoration:none;background:#efece4;color:var(--ink);padding:4px 12px;border-radius:999px;font-size:13px;}
+a.idx:hover{background:var(--accent);color:var(--accent-ink)}
+html{scroll-padding-top:80px;}
+main{padding:24px clamp(16px,4vw,48px) 60px;display:grid;gap:36px;}
+.year{display:grid;gap:18px;scroll-margin-top:80px;}
+.year h2{margin:0;font-size:22px;border-left:4px solid var(--accent);padding-left:12px;}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;}
+table{border-collapse:collapse;width:100%;font-size:14px;}
+caption{caption-side:top;text-align:left;padding:12px 16px;font-weight:600;font-size:15px;}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line);}
+thead th{background:#f1eee7;font-weight:600;white-space:nowrap;}
+th{font-weight:600}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td.num{font-family:ui-monospace,Menlo,Consolas,monospace}
+.badge-ok,.ok{color:var(--ok);font-weight:700}.badge-mid,.mid{color:var(--mid);font-weight:700}.badge-warn,.warn{color:var(--warn);font-weight:700}
+.warn-bold{color:var(--warn);font-weight:800}
+.cls{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:18px;scroll-margin-top:80px;}
+.clshead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+.clshead h3{margin:0;font-size:20px}
+.sys{color:var(--sys);font-size:13px;font-weight:600;margin-left:8px;}
+.meta{margin:2px 0 0;color:var(--muted);font-size:13px;}
+.statbar{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:14px;color:var(--muted);align-items:center;}
+.statbar b{color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace}
+.comment{background:#f4f0e8;border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;font-size:15px;line-height:1.7;}
+.comment b{color:var(--accent)}
+.subjfull{width:100%;}
+.subjfull .tablewrap{overflow-x:auto;}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+.col h4{margin:0 0 10px;font-size:15px}
+.subnote{color:var(--muted);font-weight:400;font-size:12px}
+.db{display:flex;height:14px;border-radius:4px;overflow:hidden;min-width:80px;background:#eee}
+.dseg{display:block}
+.lcmt{background:#f4f0e8;border-left:4px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:14px;line-height:1.7;margin-top:10px;}
+.lcmt b{color:var(--accent)}
+.alldone{color:var(--ok);font-weight:600}
+.clslink{color:var(--accent);text-decoration:none;font-weight:600}
+.clslink:hover{text-decoration:underline}
+footer{padding:20px clamp(16px,4vw,48px) 40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);}
+footer .legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+@media(max-width:820px){.cols{grid-template-columns:1fr}header{position:static}}
+@media print{header{position:static}body{background:#fff}.cls{break-inside:avoid;border-color:#ccc}nav#idx{display:none}#lock{display:none!important}}
+/* ---- 密码验证遮罩 ---- */
+#lock{position:fixed;inset:0;background:rgba(245,243,238,.96);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
+#lock .lcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.12);padding:30px;width:min(400px,100%);display:grid;gap:16px;}
+#lock .lcard h2{margin:0;font-size:21px}
+#lock .lcard p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+#lock .lstep{display:grid;gap:8px}
+#lock .lstep label{font-weight:700;font-size:14px;color:var(--sys)}
+#lock select{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:9px;font-size:15px;background:#fbfaf6}
+#lock .pwrow{display:flex;gap:10px}
+#lock input{flex:1;max-width:200px;padding:11px 14px;border:1px solid var(--line);border-radius:9px;font-size:18px;letter-spacing:6px;text-align:center;background:#fbfaf6}
+#lock button{padding:11px 22px;border:0;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:600;cursor:pointer}
+#lock button:hover{filter:brightness(1.08)}
+#lock .lmsg{margin:0;font-size:13px;min-height:18px}
+#lock .lmsg.ok{color:var(--ok);font-weight:600}
+#lock .lmsg.err{color:var(--warn);font-weight:700}
+body.locked main,body.locked header,body.locked footer{visibility:hidden;height:0;overflow:hidden;padding:0;margin:0;border:0}
+</style></head>
+<body class="locked">
+<div id="lock"><div class="lcard" role="dialog" aria-modal="true" aria-labelledby="ltitle">
+  <h2 id="ltitle">🔐 班级密码验证</h2>
+  <p>本页为班级数据分析汇总，需验证班级密码后方可查看全部内容（防止跨班查看）。选择班级并输入对应验证密码即可解锁本页。</p>
+  <div class="lstep"><label>选择班级</label>
+    <select id="lockCls" aria-label="选择班级"><option value="">— 请选择班级 —</option></select>
+  </div>
+  <div class="lstep"><label>该班验证密码</label>
+    <div class="pwrow">
+      <input id="lockPw" type="password" inputmode="numeric" maxlength="4" placeholder="4位密码" aria-label="验证密码" autocomplete="off">
+      <button id="lockBtn" type="button">验证并进入</button>
+    </div>
+  </div>
+  <p class="lmsg" id="lockMsg"></p>
+</div></div>
+<header>
+  <div class="hdrbar">
+    <div class="htext"><h1>行政班级月考成绩分析</h1><p>广州SCA国际学校 · 2026年10月月考 · 按行政班级维度，供班主任参考</p></div>
+    <details class="navdd"><summary aria-haspopup="true">☰ 菜单</summary><nav id="idx"><span class="navrow"><b>汇总</b><a class="idx" href="#分层统计">英语·数学分层</a></span><span class="navrow"><b>九年级</b><a class="idx" href="#cls-9G1">9G1</a><a class="idx" href="#cls-9G2">9G2</a></span><span class="navrow"><b>十年级</b><a class="idx" href="#cls-10G1">10G1</a><a class="idx" href="#cls-10G2">10G2</a><a class="idx" href="#cls-10G3">10G3</a><a class="idx" href="#cls-10D1">10D1</a></span><span class="navrow"><b>十一年级</b><a class="idx" href="#cls-11A1">11A1</a><a class="idx" href="#cls-11A2">11A2</a><a class="idx" href="#cls-11D1">11D1</a></span><span class="navrow"><b>十二年级</b><a class="idx" href="#cls-12A1">12A1</a><a class="idx" href="#cls-12A2">12A2</a><a class="idx" href="#cls-12A3">12A3</a><a class="idx" href="#cls-12A4">12A4</a><a class="idx" href="#cls-12D1">12D1</a></span></nav></details>
+  </div></header>
+<main>
+<section class="year" id="九年级">
+    <h2>九年级</h2>
+    <div class="tablewrap"><table class="ov">
+      <caption>班级总体对比（九年级）</caption>
+      <thead><tr><th>班级</th><th>体系</th><th>人数</th><th>总体均分</th><th>A*/A占比</th><th>B以上占比</th><th>及格率</th><th>不及格率</th></tr></thead>
+      <tbody><tr>
+        <td><a class="clslink" href="#cls-9G1">9G1</a></td>
+        <td>IG / AS</td>
+        <td>19人</td>
+        <td class="num">61.8</td>
+        <td class="num">41.0%</td>
+        <td class="num">46.0%</td>
+        <td class="num">77.0%</td>
+        <td class="num badge-mid">23.0%</td></tr><tr>
+        <td><a class="clslink" href="#cls-9G2">9G2</a></td>
+        <td>IG / AS</td>
+        <td>12人</td>
+        <td class="num">49.2</td>
+        <td class="num">7.8%</td>
+        <td class="num">17.6%</td>
+        <td class="num">64.7%</td>
+        <td class="num badge-mid">35.3%</td></tr></tbody></table></div><article class="cls" id="cls-9G1">
+          <div class="clshead"><div><h3>9G1 <span class="sys">IG / AS·九年级</span></h3>
+          <p class="meta">本次月考参考成绩 100 条</p></div>
+          <div class="statbar"><span><b>19</b>人</span><span>均分<b>61.8</b></span><span>及格<b>77.0%</b></span><span class="mid">不及格<b>23.0%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>IG中文均分88.6领跑全科，物理68.6、数学58.8正在接近及格线。九年级作为升学打底阶段，语言与理科基础都已建立，班级整体扎实向上，是稳定成长、值得肯定的集体。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>IG 物理</td><td class="num">19人</td><td class="num">68.6</td>
+              <td class="num">8门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 3, 'A': 5, 'B': 2, 'C': 1, 'D': 7, 'E': 1, 'U': 0}"><span class="dseg" style="background:var(--g9);width:15.79%"></span><span class="dseg" style="background:var(--g8);width:26.32%"></span><span class="dseg" style="background:var(--g7);width:10.53%"></span><span class="dseg" style="background:var(--g6);width:5.26%"></span><span class="dseg" style="background:var(--g5);width:36.84%"></span><span class="dseg" style="background:var(--g4);width:5.26%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>IG 数学</td><td class="num">19人</td><td class="num">58.8</td>
+              <td class="num">7门</td><td class="num warn-bold">6人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 6, 'A': 1, 'B': 0, 'C': 2, 'D': 3, 'E': 1, 'U': 6}"><span class="dseg" style="background:var(--g9);width:31.58%"></span><span class="dseg" style="background:var(--g8);width:5.26%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:10.53%"></span><span class="dseg" style="background:var(--g5);width:15.79%"></span><span class="dseg" style="background:var(--g4);width:5.26%"></span><span class="dseg" style="background:var(--g2);width:31.58%"></span></div></td></tr><tr><td>ESL 英语</td><td class="num">19人</td><td class="num">58.7</td>
+              <td class="num">6门</td><td class="num warn-bold">4人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 5, 'B': 1, 'C': 4, 'D': 2, 'E': 2, 'U': 4}"><span class="dseg" style="background:var(--g9);width:5.26%"></span><span class="dseg" style="background:var(--g8);width:26.32%"></span><span class="dseg" style="background:var(--g7);width:5.26%"></span><span class="dseg" style="background:var(--g6);width:21.05%"></span><span class="dseg" style="background:var(--g5);width:10.53%"></span><span class="dseg" style="background:var(--g4);width:10.53%"></span><span class="dseg" style="background:var(--g2);width:21.05%"></span></div></td></tr><tr><td>IG 化学</td><td class="num">19人</td><td class="num">36.6</td>
+              <td class="num">3门</td><td class="num warn-bold">12人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 2, 'B': 0, 'C': 1, 'D': 2, 'E': 1, 'U': 12}"><span class="dseg" style="background:var(--g9);width:5.26%"></span><span class="dseg" style="background:var(--g8);width:10.53%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:5.26%"></span><span class="dseg" style="background:var(--g5);width:10.53%"></span><span class="dseg" style="background:var(--g4);width:5.26%"></span><span class="dseg" style="background:var(--g2);width:63.16%"></span></div></td></tr><tr><td>IG 中文</td><td class="num">18人</td><td class="num">88.6</td>
+              <td class="num">16门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 12, 'A': 4, 'B': 1, 'C': 0, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:66.67%"></span><span class="dseg" style="background:var(--g8);width:22.22%"></span><span class="dseg" style="background:var(--g7);width:5.56%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:5.56%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>IG 地理</td><td class="num">3人</td><td class="num">42.3</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 1, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:33.33%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:33.33%"></span><span class="dseg" style="background:var(--g2);width:33.33%"></span></div></td></tr><tr><td>IG 生物</td><td class="num">3人</td><td class="num">77.3</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 0, 'B': 1, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:33.33%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:33.33%"></span><span class="dseg" style="background:var(--g6);width:33.33%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>刘亦凡</td><td class="num">6</td><td class="num">94.7</td>
+                  <td class="num ok">6门</td><td>IG 物理(100)</td></tr><tr><td>吴博轩</td><td class="num">5</td><td class="num">88.8</td>
+                  <td class="num ok">5门</td><td>IG 数学(100)</td></tr><tr><td>罗扬</td><td class="num">6</td><td class="num">87.7</td>
+                  <td class="num ok">5门</td><td>IG 数学(100)</td></tr><tr><td>张艺凌</td><td class="num">6</td><td class="num">80.5</td>
+                  <td class="num ok">4门</td><td>IG 数学(99)</td></tr><tr><td>黄琪涵</td><td class="num">5</td><td class="num">79.0</td>
+                  <td class="num ok">3门</td><td>IG 中文(97)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>张静沿</td><td class="num">5</td><td class="num">37.8</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>ESL 英语(20)、IG 数学(20)、IG 化学(29)</td></tr><tr><td>郭皓铭</td><td class="num">4</td><td class="num">30.2</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 化学(5)、IG 数学(25)、ESL 英语(36)</td></tr><tr><td>温紫琳</td><td class="num">5</td><td class="num">31.8</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 化学(7)、IG 数学(10)、ESL 英语(12)</td></tr><tr><td>杨郑煌</td><td class="num">5</td><td class="num">47.0</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 化学(0)、IG 数学(2)、IG 物理(60)</td></tr><tr><td>王战</td><td class="num">5</td><td class="num">38.6</td>
+                  <td class="num warn">2科</td>
+                  <td>ESL 英语(12)、IG 化学(18)、IG 物理(50)</td></tr><tr><td>温嘉宏</td><td class="num">5</td><td class="num">51.6</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 数学(30)、IG 化学(36)、ESL 英语(44)</td></tr><tr><td>余明雍</td><td class="num">5</td><td class="num">50.8</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 化学(2)、IG 数学(34)、ESL 英语(52)</td></tr><tr><td>周娓浵</td><td class="num">6</td><td class="num">45.8</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 化学(0)、IG 地理(20)、IG 物理(50)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-9G2">
+          <div class="clshead"><div><h3>9G2 <span class="sys">IG / AS·九年级</span></h3>
+          <p class="meta">本次月考参考成绩 51 条</p></div>
+          <div class="statbar"><span><b>12</b>人</span><span>均分<b>49.2</b></span><span>及格<b>64.7%</b></span><span class="mid">不及格<b>35.3%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>班额适中（12人）便于逐个跟进，IG中文68.0、ESL英语62.0已稳过及格线，语言底子不弱。当前个别理科科目还在攻坚期，只要在化学和代数基础上多下功夫，人均进步空间很大，九年级打基础阶段潜力很足。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>IG 物理</td><td class="num">10人</td><td class="num">44.9</td>
+              <td class="num">0门</td><td class="num warn-bold">4人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 3, 'D': 2, 'E': 0, 'U': 4}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:10.00%"></span><span class="dseg" style="background:var(--g6);width:30.00%"></span><span class="dseg" style="background:var(--g5);width:20.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:40.00%"></span></div></td></tr><tr><td>IG 中文</td><td class="num">10人</td><td class="num">68.0</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 1, 'C': 6, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:20.00%"></span><span class="dseg" style="background:var(--g7);width:10.00%"></span><span class="dseg" style="background:var(--g6);width:60.00%"></span><span class="dseg" style="background:var(--g5);width:10.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>ESL 英语</td><td class="num">10人</td><td class="num">62.0</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 3, 'C': 3, 'D': 0, 'E': 2, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:10.00%"></span><span class="dseg" style="background:var(--g7);width:30.00%"></span><span class="dseg" style="background:var(--g6);width:30.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:20.00%"></span><span class="dseg" style="background:var(--g2);width:10.00%"></span></div></td></tr><tr><td>IG 数学</td><td class="num">10人</td><td class="num">48.6</td>
+              <td class="num">1门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 3, 'D': 2, 'E': 1, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:10.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:30.00%"></span><span class="dseg" style="background:var(--g5);width:20.00%"></span><span class="dseg" style="background:var(--g4);width:10.00%"></span><span class="dseg" style="background:var(--g2);width:30.00%"></span></div></td></tr><tr><td>IG 化学</td><td class="num">9人</td><td class="num">23.6</td>
+              <td class="num">0门</td><td class="num warn-bold">8人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 1, 'U': 8}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:11.11%"></span><span class="dseg" style="background:var(--g2);width:88.89%"></span></div></td></tr><tr><td>IG 地理</td><td class="num">2人</td><td class="num">30.0</td>
+              <td class="num">0门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:100.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>卢梓诚</td><td class="num">5</td><td class="num">68.8</td>
+                  <td class="num ok">2门</td><td>IG 数学(87)</td></tr><tr><td>黄熙伦</td><td class="num">4</td><td class="num">65.2</td>
+                  <td class="num ok">0门</td><td>ESL 英语(72)</td></tr><tr><td>孟凡</td><td class="num">1</td><td class="num">60.0</td>
+                  <td class="num ok">0门</td><td>IG 物理(60)</td></tr><tr><td>戴千泽</td><td class="num">5</td><td class="num">57.2</td>
+                  <td class="num ok">1门</td><td>IG 中文(80)</td></tr><tr><td>彭钧翰</td><td class="num">5</td><td class="num">56.0</td>
+                  <td class="num ok">0门</td><td>IG 中文(68)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>黄梓霆</td><td class="num">5</td><td class="num">30.6</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>IG 数学(5)、IG 化学(18)、IG 物理(30)</td></tr><tr><td>谢雨晴</td><td class="num">6</td><td class="num">30.3</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>IG 物理(5)、IG 化学(9)、IG 数学(25)</td></tr><tr><td>蔡尚恩</td><td class="num">3</td><td class="num">31.3</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 化学(0)、IG 物理(30)、IG 中文(64)</td></tr><tr><td>张奕成</td><td class="num">6</td><td class="num">53.0</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 化学(31)、IG 地理(33)、IG 物理(50)</td></tr></tbody></table></div></div></div></article></section><section class="year" id="十年级">
+    <h2>十年级</h2>
+    <div class="tablewrap"><table class="ov">
+      <caption>班级总体对比（十年级）</caption>
+      <thead><tr><th>班级</th><th>体系</th><th>人数</th><th>总体均分</th><th>A*/A占比</th><th>B以上占比</th><th>及格率</th><th>不及格率</th></tr></thead>
+      <tbody><tr>
+        <td><a class="clslink" href="#cls-10G1">10G1</a></td>
+        <td>IG / AS</td>
+        <td>17人</td>
+        <td class="num">66.6</td>
+        <td class="num">42.7%</td>
+        <td class="num">50.5%</td>
+        <td class="num">86.4%</td>
+        <td class="num badge-ok">13.6%</td></tr><tr>
+        <td><a class="clslink" href="#cls-10G2">10G2</a></td>
+        <td>IG / AS</td>
+        <td>18人</td>
+        <td class="num">47.3</td>
+        <td class="num">27.5%</td>
+        <td class="num">34.3%</td>
+        <td class="num">54.9%</td>
+        <td class="num badge-warn">45.1%</td></tr><tr>
+        <td><a class="clslink" href="#cls-10G3">10G3</a></td>
+        <td>IG / AS</td>
+        <td>11人</td>
+        <td class="num">43.4</td>
+        <td class="num">9.1%</td>
+        <td class="num">22.7%</td>
+        <td class="num">51.5%</td>
+        <td class="num badge-warn">48.5%</td></tr><tr>
+        <td><a class="clslink" href="#cls-10D1">10D1</a></td>
+        <td>DSE</td>
+        <td>8人</td>
+        <td class="num">58.3</td>
+        <td class="num">21.8%</td>
+        <td class="num">36.4%</td>
+        <td class="num">85.5%</td>
+        <td class="num badge-ok">14.5%</td></tr></tbody></table></div><article class="cls" id="cls-10G1">
+          <div class="clshead"><div><h3>10G1 <span class="sys">IG / AS·十年级</span></h3>
+          <p class="meta">本次月考参考成绩 103 条</p></div>
+          <div class="statbar"><span><b>17</b>人</span><span>均分<b>66.6</b></span><span>及格<b>86.4%</b></span><span class="ok">不及格<b>13.6%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>十年级综合均分66.6、及格率86.4%，IG中文89.1、ESL英语78.1、学术英语课程87.5多科亮眼，经济、化学、物理也都站上及格线，是全校IG体系里学风最扎实、最全面的班级之一，值得重点表扬。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>AS 数学</td><td class="num">17人</td><td class="num">51.1</td>
+              <td class="num">5门</td><td class="num warn-bold">7人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 2, 'A': 3, 'B': 0, 'C': 2, 'D': 1, 'E': 2, 'U': 7}"><span class="dseg" style="background:var(--g9);width:11.76%"></span><span class="dseg" style="background:var(--g8);width:17.65%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:11.76%"></span><span class="dseg" style="background:var(--g5);width:5.88%"></span><span class="dseg" style="background:var(--g4);width:11.76%"></span><span class="dseg" style="background:var(--g2);width:41.18%"></span></div></td></tr><tr><td>IG 经济</td><td class="num">16人</td><td class="num">63.9</td>
+              <td class="num">5门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 2, 'A': 3, 'B': 1, 'C': 4, 'D': 1, 'E': 4, 'U': 1}"><span class="dseg" style="background:var(--g9);width:12.50%"></span><span class="dseg" style="background:var(--g8);width:18.75%"></span><span class="dseg" style="background:var(--g7);width:6.25%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:6.25%"></span><span class="dseg" style="background:var(--g4);width:25.00%"></span><span class="dseg" style="background:var(--g2);width:6.25%"></span></div></td></tr><tr><td>IG 化学</td><td class="num">16人</td><td class="num">59.0</td>
+              <td class="num">5门</td><td class="num warn-bold">4人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 4, 'A': 1, 'B': 2, 'C': 1, 'D': 2, 'E': 2, 'U': 4}"><span class="dseg" style="background:var(--g9);width:25.00%"></span><span class="dseg" style="background:var(--g8);width:6.25%"></span><span class="dseg" style="background:var(--g7);width:12.50%"></span><span class="dseg" style="background:var(--g6);width:6.25%"></span><span class="dseg" style="background:var(--g5);width:12.50%"></span><span class="dseg" style="background:var(--g4);width:12.50%"></span><span class="dseg" style="background:var(--g2);width:25.00%"></span></div></td></tr><tr><td>IG 中文</td><td class="num">16人</td><td class="num">89.1</td>
+              <td class="num">16门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 6, 'A': 10, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:37.50%"></span><span class="dseg" style="background:var(--g8);width:62.50%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>IG 物理</td><td class="num">12人</td><td class="num">65.6</td>
+              <td class="num">5门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 4, 'A': 1, 'B': 1, 'C': 1, 'D': 1, 'E': 2, 'U': 2}"><span class="dseg" style="background:var(--g9);width:33.33%"></span><span class="dseg" style="background:var(--g8);width:8.33%"></span><span class="dseg" style="background:var(--g7);width:8.33%"></span><span class="dseg" style="background:var(--g6);width:8.33%"></span><span class="dseg" style="background:var(--g5);width:8.33%"></span><span class="dseg" style="background:var(--g4);width:16.67%"></span><span class="dseg" style="background:var(--g2);width:16.67%"></span></div></td></tr><tr><td>ESL 英语</td><td class="num">7人</td><td class="num">78.1</td>
+              <td class="num">4门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 2, 'A': 2, 'B': 1, 'C': 1, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:28.57%"></span><span class="dseg" style="background:var(--g8);width:28.57%"></span><span class="dseg" style="background:var(--g7);width:14.29%"></span><span class="dseg" style="background:var(--g6);width:14.29%"></span><span class="dseg" style="background:var(--g5);width:14.29%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 英语</td><td class="num">5人</td><td class="num">55.2</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 2, 'D': 2, 'E': 1, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:40.00%"></span><span class="dseg" style="background:var(--g5);width:40.00%"></span><span class="dseg" style="background:var(--g4);width:20.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>G10 学术英语发展课程</td><td class="num">4人</td><td class="num">87.5</td>
+              <td class="num">3门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 2, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:25.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>IG 生物</td><td class="num">3人</td><td class="num">67.7</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 1, 'U': 0}"><span class="dseg" style="background:var(--g9);width:33.33%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:33.33%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:33.33%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>IG 地理</td><td class="num">3人</td><td class="num">56.3</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 1, 'E': 1, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:33.33%"></span><span class="dseg" style="background:var(--g5);width:33.33%"></span><span class="dseg" style="background:var(--g4);width:33.33%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>苏朗</td><td class="num">7</td><td class="num">91.0</td>
+                  <td class="num ok">6门</td><td>G10 学术英语发展课程(100)</td></tr><tr><td>杨愉阅</td><td class="num">8</td><td class="num">89.7</td>
+                  <td class="num ok">6门</td><td>IG 物理(100)</td></tr><tr><td>文途</td><td class="num">6</td><td class="num">88.0</td>
+                  <td class="num ok">5门</td><td>IG 物理(100)</td></tr><tr><td>杨乔</td><td class="num">7</td><td class="num">79.6</td>
+                  <td class="num ok">5门</td><td>IG 物理(97)</td></tr><tr><td>朱其卉</td><td class="num">7</td><td class="num">76.7</td>
+                  <td class="num ok">4门</td><td>IG 经济(87)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>崔瑞峻</td><td class="num">6</td><td class="num">37.0</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>AS 数学(6)、IG 化学(18)、IG 物理(19)</td></tr><tr><td>刘浩玄</td><td class="num">5</td><td class="num">48.8</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 化学(10)、AS 数学(35)、ESL 英语(53)</td></tr><tr><td>邓炜均</td><td class="num">6</td><td class="num">50.5</td>
+                  <td class="num warn">2科</td>
+                  <td>AS 数学(13)、IG 化学(25)、IG 经济(47)</td></tr><tr><td>曾佳敏</td><td class="num">5</td><td class="num">51.8</td>
+                  <td class="num warn">2科</td>
+                  <td>AS 数学(13)、IG 化学(18)、IG 经济(60)</td></tr><tr><td>曾昕妍</td><td class="num">2</td><td class="num">29.0</td>
+                  <td class="num warn">2科</td>
+                  <td>AS 数学(28)、IG 经济(30)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-10G2">
+          <div class="clshead"><div><h3>10G2 <span class="sys">IG / AS·十年级</span></h3>
+          <p class="meta">本次月考参考成绩 102 条</p></div>
+          <div class="statbar"><span><b>18</b>人</span><span>均分<b>47.3</b></span><span>及格<b>54.9%</b></span><span class="warn">不及格<b>45.1%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>IG中文79.8表现抢眼，英语科目也稳步推进。当前AS数学、物理正处在爬坡期，个别同学待补，但班风积极、科任老师配合度高，只要集中突破数理主干，全班整体回升的空间非常大，正是班主任发力拉分的好时机。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>IG 化学</td><td class="num">17人</td><td class="num">44.3</td>
+              <td class="num">3门</td><td class="num warn-bold">9人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 2, 'B': 2, 'C': 0, 'D': 2, 'E': 1, 'U': 9}"><span class="dseg" style="background:var(--g9);width:5.88%"></span><span class="dseg" style="background:var(--g8);width:11.76%"></span><span class="dseg" style="background:var(--g7);width:11.76%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:11.76%"></span><span class="dseg" style="background:var(--g4);width:5.88%"></span><span class="dseg" style="background:var(--g2);width:52.94%"></span></div></td></tr><tr><td>IG 中文</td><td class="num">17人</td><td class="num">79.8</td>
+              <td class="num">14门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 5, 'A': 9, 'B': 1, 'C': 0, 'D': 1, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:29.41%"></span><span class="dseg" style="background:var(--g8);width:52.94%"></span><span class="dseg" style="background:var(--g7);width:5.88%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:5.88%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:5.88%"></span></div></td></tr><tr><td>AS 数学</td><td class="num">16人</td><td class="num">27.4</td>
+              <td class="num">2门</td><td class="num warn-bold">12人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 1, 'B': 0, 'C': 1, 'D': 1, 'E': 0, 'U': 12}"><span class="dseg" style="background:var(--g9);width:6.25%"></span><span class="dseg" style="background:var(--g8);width:6.25%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:6.25%"></span><span class="dseg" style="background:var(--g5);width:6.25%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:75.00%"></span></div></td></tr><tr><td>IG 物理</td><td class="num">14人</td><td class="num">34.1</td>
+              <td class="num">3门</td><td class="num warn-bold">10人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 2, 'A': 1, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 10}"><span class="dseg" style="background:var(--g9);width:14.29%"></span><span class="dseg" style="background:var(--g8);width:7.14%"></span><span class="dseg" style="background:var(--g7);width:7.14%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:71.43%"></span></div></td></tr><tr><td>AL 英语</td><td class="num">11人</td><td class="num">43.1</td>
+              <td class="num">1门</td><td class="num warn-bold">5人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 0, 'D': 5, 'E': 0, 'U': 5}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:9.09%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:45.45%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:45.45%"></span></div></td></tr><tr><td>IG 经济</td><td class="num">11人</td><td class="num">43.7</td>
+              <td class="num">1门</td><td class="num warn-bold">5人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 2, 'C': 1, 'D': 1, 'E': 1, 'U': 5}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:9.09%"></span><span class="dseg" style="background:var(--g7);width:18.18%"></span><span class="dseg" style="background:var(--g6);width:9.09%"></span><span class="dseg" style="background:var(--g5);width:9.09%"></span><span class="dseg" style="background:var(--g4);width:9.09%"></span><span class="dseg" style="background:var(--g2);width:45.45%"></span></div></td></tr><tr><td>IG 地理</td><td class="num">4人</td><td class="num">19.5</td>
+              <td class="num">0门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:75.00%"></span></div></td></tr><tr><td>IG 生物</td><td class="num">4人</td><td class="num">43.5</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 3, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:75.00%"></span><span class="dseg" style="background:var(--g2);width:25.00%"></span></div></td></tr><tr><td>ESL 英语</td><td class="num">4人</td><td class="num">75.0</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 1, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>G10 学术英语发展课程</td><td class="num">2人</td><td class="num">87.5</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:100.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>张智美</td><td class="num">6</td><td class="num">90.7</td>
+                  <td class="num ok">6门</td><td>IG 物理(100)</td></tr><tr><td>陈瑞蓥</td><td class="num">6</td><td class="num">82.5</td>
+                  <td class="num ok">4门</td><td>IG 物理(100)</td></tr><tr><td>霍珈盈</td><td class="num">6</td><td class="num">72.2</td>
+                  <td class="num ok">3门</td><td>IG 中文(94)</td></tr><tr><td>刘永琪</td><td class="num">6</td><td class="num">70.2</td>
+                  <td class="num ok">2门</td><td>IG 中文(93)</td></tr><tr><td>蔡子墨</td><td class="num">7</td><td class="num">59.1</td>
+                  <td class="num ok">2门</td><td>IG 中文(94)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>李睿璟</td><td class="num">6</td><td class="num">24.2</td>
+                  <td class="num warn-bold">5科</td>
+                  <td>AS 数学(0)、IG 经济(3)、IG 物理(10)</td></tr><tr><td>黄润泽</td><td class="num">5</td><td class="num">7.8</td>
+                  <td class="num warn-bold">5科</td>
+                  <td>IG 物理(0)、AS 数学(0)、IG 中文(0)</td></tr><tr><td>全丫</td><td class="num">6</td><td class="num">28.2</td>
+                  <td class="num warn-bold">5科</td>
+                  <td>IG 地理(3)、AS 数学(10)、IG 物理(11)</td></tr><tr><td>林瑾瑜</td><td class="num">6</td><td class="num">33.4</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>IG 地理(8)、AS 数学(10)、IG 物理(11)</td></tr><tr><td>王宇圳</td><td class="num">5</td><td class="num">20.8</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>IG 物理(0)、AS 数学(13)、IG 化学(14)</td></tr><tr><td>肖邵泷</td><td class="num">6</td><td class="num">32.7</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>IG 经济(7)、AS 数学(13)、AL 英语(17)</td></tr><tr><td>吴熙</td><td class="num">5</td><td class="num">34.1</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 地理(0)、AS 数学(13)、IG 物理(14)</td></tr><tr><td>刘子豪</td><td class="num">4</td><td class="num">31.3</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 物理(11)、IG 经济(17)、IG 化学(27)</td></tr><tr><td>姚鉴峰</td><td class="num">6</td><td class="num">52.2</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 物理(21)、IG 化学(22)、AS 数学(28)</td></tr><tr><td>朱垲铭</td><td class="num">4</td><td class="num">32.2</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 化学(10)、IG 物理(18)、AL 英语(21)</td></tr><tr><td>孙英昊</td><td class="num">7</td><td class="num">52.6</td>
+                  <td class="num warn">2科</td>
+                  <td>AS 数学(0)、IG 化学(29)、IG 生物(41)</td></tr><tr><td>刘玥含</td><td class="num">6</td><td class="num">57.8</td>
+                  <td class="num warn">2科</td>
+                  <td>AS 数学(19)、IG 经济(30)、IG 地理(67)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-10G3">
+          <div class="clshead"><div><h3>10G3 <span class="sys">IG / AS·十年级</span></h3>
+          <p class="meta">本次月考参考成绩 66 条</p></div>
+          <div class="statbar"><span><b>11</b>人</span><span>均分<b>43.4</b></span><span>及格<b>51.5%</b></span><span class="warn">不及格<b>48.5%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>IG中文73.1是班级的稳固支柱，ESL英语67.4顺利过关。虽然数理化整体还在攻坚阶段，但这正说明提升空间大；11人的小班非常适合逐个辅导，针对性补差见效快，是能让班主任看到明显起色的班级。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>IG 经济</td><td class="num">11人</td><td class="num">31.2</td>
+              <td class="num">0门</td><td class="num warn-bold">7人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 1, 'E': 2, 'U': 7}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:9.09%"></span><span class="dseg" style="background:var(--g5);width:9.09%"></span><span class="dseg" style="background:var(--g4);width:18.18%"></span><span class="dseg" style="background:var(--g2);width:63.64%"></span></div></td></tr><tr><td>IG 中文</td><td class="num">11人</td><td class="num">73.1</td>
+              <td class="num">3门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 2, 'B': 5, 'C': 1, 'D': 2, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:9.09%"></span><span class="dseg" style="background:var(--g8);width:18.18%"></span><span class="dseg" style="background:var(--g7);width:45.45%"></span><span class="dseg" style="background:var(--g6);width:9.09%"></span><span class="dseg" style="background:var(--g5);width:18.18%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AS 数学</td><td class="num">10人</td><td class="num">22.0</td>
+              <td class="num">0门</td><td class="num warn-bold">9人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 9}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:10.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:90.00%"></span></div></td></tr><tr><td>IG 物理</td><td class="num">9人</td><td class="num">41.4</td>
+              <td class="num">1门</td><td class="num warn-bold">5人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 0, 'B': 1, 'C': 1, 'D': 0, 'E': 1, 'U': 5}"><span class="dseg" style="background:var(--g9);width:11.11%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:11.11%"></span><span class="dseg" style="background:var(--g6);width:11.11%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:11.11%"></span><span class="dseg" style="background:var(--g2);width:55.56%"></span></div></td></tr><tr><td>IG 地理</td><td class="num">6人</td><td class="num">43.2</td>
+              <td class="num">0门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 2, 'D': 1, 'E': 0, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:33.33%"></span><span class="dseg" style="background:var(--g5);width:16.67%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:50.00%"></span></div></td></tr><tr><td>IG 化学</td><td class="num">6人</td><td class="num">17.5</td>
+              <td class="num">0门</td><td class="num warn-bold">5人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 1, 'U': 5}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:16.67%"></span><span class="dseg" style="background:var(--g2);width:83.33%"></span></div></td></tr><tr><td>ESL 英语</td><td class="num">5人</td><td class="num">67.4</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 2, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:20.00%"></span><span class="dseg" style="background:var(--g7);width:20.00%"></span><span class="dseg" style="background:var(--g6);width:40.00%"></span><span class="dseg" style="background:var(--g5);width:20.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 英语</td><td class="num">5人</td><td class="num">50.8</td>
+              <td class="num">0门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 2, 'C': 0, 'D': 1, 'E': 0, 'U': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:40.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:20.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:40.00%"></span></div></td></tr><tr><td>G10 学术英语发展课程</td><td class="num">1人</td><td class="num">87.5</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:100.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>IG 生物</td><td class="num">1人</td><td class="num">24.0</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:100.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>吕周翰</td><td class="num">6</td><td class="num">75.8</td>
+                  <td class="num ok">3门</td><td>IG 物理(99)</td></tr><tr><td>邱若可</td><td class="num">7</td><td class="num">61.1</td>
+                  <td class="num ok">1门</td><td>G10 学术英语发展课程(88)</td></tr><tr><td>吴泽茗</td><td class="num">7</td><td class="num">49.6</td>
+                  <td class="num ok">0门</td><td>IG 中文(76)</td></tr><tr><td>陈钰珊</td><td class="num">6</td><td class="num">49.3</td>
+                  <td class="num ok">1门</td><td>IG 中文(84)</td></tr><tr><td>黄宇熙</td><td class="num">6</td><td class="num">44.0</td>
+                  <td class="num ok">0门</td><td>IG 中文(76)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>王竞尧</td><td class="num">6</td><td class="num">21.2</td>
+                  <td class="num warn-bold">5科</td>
+                  <td>IG 地理(5)、IG 物理(10)、AS 数学(10)</td></tr><tr><td>常世明</td><td class="num">6</td><td class="num">21.8</td>
+                  <td class="num warn-bold">5科</td>
+                  <td>AS 数学(0)、IG 化学(2)、IG 经济(3)</td></tr><tr><td>王东俊</td><td class="num">6</td><td class="num">32.0</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>AS 数学(10)、IG 化学(11)、IG 经济(15)</td></tr><tr><td>吴泽茗</td><td class="num">7</td><td class="num">49.6</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 化学(26)、AS 数学(35)、IG 地理(38)</td></tr><tr><td>黄宇熙</td><td class="num">6</td><td class="num">44.0</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 物理(21)、AS 数学(23)、IG 经济(33)</td></tr><tr><td>罗海薇</td><td class="num">5</td><td class="num">42.0</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>IG 经济(18)、AS 数学(19)、IG 地理(31)</td></tr><tr><td>王凯睿</td><td class="num">6</td><td class="num">34.5</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>AS 数学(0)、IG 化学(4)、IG 物理(30)</td></tr><tr><td>邱若可</td><td class="num">7</td><td class="num">61.1</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 经济(30)、AS 数学(37)、IG 地理(67)</td></tr><tr><td>陈钰珊</td><td class="num">6</td><td class="num">49.3</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 经济(18)、AS 数学(23)、IG 物理(44)</td></tr><tr><td>张耐芯</td><td class="num">5</td><td class="num">41.0</td>
+                  <td class="num warn">2科</td>
+                  <td>IG 化学(22)、IG 生物(24)、IG 经济(47)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-10D1">
+          <div class="clshead"><div><h3>10D1 <span class="sys">DSE·十年级</span></h3>
+          <p class="meta">本次月考参考成绩 55 条</p></div>
+          <div class="statbar"><span><b>8</b>人</span><span>均分<b>58.3</b></span><span>及格<b>85.5%</b></span><span class="ok">不及格<b>14.5%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>作为DSE方向班，延伸数学M2均分75.6、必修数学66.9、经济68.5，数理优势非常突出。8人小班学习氛围好，主攻语文学科即可整体抬升，DSE升学路径起跑稳健、势头很好。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>DSE中國語文</td><td class="num">8人</td><td class="num">48.2</td>
+              <td class="num">1门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 1, 'D': 1, 'E': 1, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:12.50%"></span><span class="dseg" style="background:var(--g7);width:12.50%"></span><span class="dseg" style="background:var(--g6);width:12.50%"></span><span class="dseg" style="background:var(--g5);width:12.50%"></span><span class="dseg" style="background:var(--g4);width:12.50%"></span><span class="dseg" style="background:var(--g2);width:37.50%"></span></div></td></tr><tr><td>DSE 延伸數學M2</td><td class="num">8人</td><td class="num">75.6</td>
+              <td class="num">5门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 4, 'B': 1, 'C': 0, 'D': 2, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:12.50%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:12.50%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 必修數學</td><td class="num">8人</td><td class="num">66.9</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 1, 'B': 3, 'C': 0, 'D': 3, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:12.50%"></span><span class="dseg" style="background:var(--g8);width:12.50%"></span><span class="dseg" style="background:var(--g7);width:37.50%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:37.50%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 公民與社會發展</td><td class="num">8人</td><td class="num">41.1</td>
+              <td class="num">0门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 2, 'C': 0, 'D': 1, 'E': 2, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:12.50%"></span><span class="dseg" style="background:var(--g4);width:25.00%"></span><span class="dseg" style="background:var(--g2);width:37.50%"></span></div></td></tr><tr><td>DSE英國語文</td><td class="num">7人</td><td class="num">51.6</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 3, 'D': 0, 'E': 3, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:42.86%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:42.86%"></span><span class="dseg" style="background:var(--g2);width:14.29%"></span></div></td></tr><tr><td>DSE 物理</td><td class="num">7人</td><td class="num">55.3</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 1, 'D': 4, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:14.29%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:14.29%"></span><span class="dseg" style="background:var(--g5);width:57.14%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:14.29%"></span></div></td></tr><tr><td>DSE 經濟</td><td class="num">4人</td><td class="num">68.5</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 0, 'C': 1, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 生物</td><td class="num">3人</td><td class="num">54.3</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 3, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:100.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 化學</td><td class="num">2人</td><td class="num">82.2</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 0, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:50.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:50.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>周芷君</td><td class="num">7</td><td class="num">80.2</td>
+                  <td class="num ok">4门</td><td>DSE 延伸數學M2(95)</td></tr><tr><td>李鑫豪</td><td class="num">7</td><td class="num">72.0</td>
+                  <td class="num ok">4门</td><td>DSE 延伸數學M2(85)</td></tr><tr><td>张静文</td><td class="num">7</td><td class="num">66.1</td>
+                  <td class="num ok">2门</td><td>DSE 延伸數學M2(85)</td></tr><tr><td>陈浩正</td><td class="num">7</td><td class="num">57.7</td>
+                  <td class="num ok">1门</td><td>DSE 延伸數學M2(85)</td></tr><tr><td>张克啸</td><td class="num">7</td><td class="num">56.4</td>
+                  <td class="num ok">1门</td><td>DSE 延伸數學M2(85)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>赵子琛</td><td class="num">7</td><td class="num">45.6</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>DSE 公民與社會發展(7)、DSE 物理(32)、DSE中國語文(37)</td></tr><tr><td>陈浩正</td><td class="num">7</td><td class="num">57.7</td>
+                  <td class="num warn">2科</td>
+                  <td>DSE 公民與社會發展(29)、DSE中國語文(33)、DSE 物理(51)</td></tr><tr><td>朱恩泽</td><td class="num">7</td><td class="num">37.9</td>
+                  <td class="num warn">2科</td>
+                  <td>DSE中國語文(6)、DSE 公民與社會發展(7)、DSE英國語文(46)</td></tr></tbody></table></div></div></div></article></section><section class="year" id="十一年级">
+    <h2>十一年级</h2>
+    <div class="tablewrap"><table class="ov">
+      <caption>班级总体对比（十一年级）</caption>
+      <thead><tr><th>班级</th><th>体系</th><th>人数</th><th>总体均分</th><th>A*/A占比</th><th>B以上占比</th><th>及格率</th><th>不及格率</th></tr></thead>
+      <tbody><tr>
+        <td><a class="clslink" href="#cls-11A1">11A1</a></td>
+        <td>AL</td>
+        <td>12人</td>
+        <td class="num">54.0</td>
+        <td class="num">16.3%</td>
+        <td class="num">30.2%</td>
+        <td class="num">74.4%</td>
+        <td class="num badge-mid">25.6%</td></tr><tr>
+        <td><a class="clslink" href="#cls-11A2">11A2</a></td>
+        <td>AL</td>
+        <td>23人</td>
+        <td class="num">64.3</td>
+        <td class="num">23.7%</td>
+        <td class="num">46.5%</td>
+        <td class="num">87.7%</td>
+        <td class="num badge-ok">12.3%</td></tr><tr>
+        <td><a class="clslink" href="#cls-11D1">11D1</a></td>
+        <td>DSE</td>
+        <td>4人</td>
+        <td class="num">57.7</td>
+        <td class="num">19.2%</td>
+        <td class="num">38.5%</td>
+        <td class="num">73.1%</td>
+        <td class="num badge-mid">26.9%</td></tr></tbody></table></div><article class="cls" id="cls-11A1">
+          <div class="clshead"><div><h3>11A1 <span class="sys">AL·十一年级</span></h3>
+          <p class="meta">本次月考参考成绩 43 条</p></div>
+          <div class="statbar"><span><b>12</b>人</span><span>均分<b>54.0</b></span><span>及格<b>74.4%</b></span><span class="mid">不及格<b>25.6%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>AL数学65.5全班过半出分，高数61.2、化学60.0也都摸到B线，A-Level进阶基础已经筑牢。12人的班适合精讲精练，英语再跟上，全班冲A的势头很足。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>AL 数学</td><td class="num">11人</td><td class="num">65.5</td>
+              <td class="num">4门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 3, 'B': 2, 'C': 2, 'D': 2, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:9.09%"></span><span class="dseg" style="background:var(--g8);width:27.27%"></span><span class="dseg" style="background:var(--g7);width:18.18%"></span><span class="dseg" style="background:var(--g6);width:18.18%"></span><span class="dseg" style="background:var(--g5);width:18.18%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:9.09%"></span></div></td></tr><tr><td>AL 英语</td><td class="num">9人</td><td class="num">37.1</td>
+              <td class="num">0门</td><td class="num warn-bold">4人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 2, 'D': 2, 'E': 1, 'U': 4}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:22.22%"></span><span class="dseg" style="background:var(--g5);width:22.22%"></span><span class="dseg" style="background:var(--g4);width:11.11%"></span><span class="dseg" style="background:var(--g2);width:44.44%"></span></div></td></tr><tr><td>AL 中文</td><td class="num">8人</td><td class="num">51.2</td>
+              <td class="num">0门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 2, 'C': 0, 'D': 2, 'E': 2, 'U': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:25.00%"></span><span class="dseg" style="background:var(--g2);width:25.00%"></span></div></td></tr><tr><td>AS 物理</td><td class="num">5人</td><td class="num">52.8</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 0, 'D': 2, 'E': 1, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:20.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:40.00%"></span><span class="dseg" style="background:var(--g4);width:20.00%"></span><span class="dseg" style="background:var(--g2);width:20.00%"></span></div></td></tr><tr><td>AL 高数</td><td class="num">4人</td><td class="num">61.2</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 0, 'B': 1, 'C': 0, 'D': 0, 'E': 1, 'U': 1}"><span class="dseg" style="background:var(--g9);width:25.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:25.00%"></span><span class="dseg" style="background:var(--g2);width:25.00%"></span></div></td></tr><tr><td>AL 化学</td><td class="num">3人</td><td class="num">60.0</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:33.33%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:33.33%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:33.33%"></span></div></td></tr><tr><td>AS 地理</td><td class="num">1人</td><td class="num">35.0</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:100.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>周景晨</td><td class="num">2</td><td class="num">91.5</td>
+                  <td class="num ok">2门</td><td>AL 高数(93)</td></tr><tr><td>梁蓓蓓</td><td class="num">2</td><td class="num">70.0</td>
+                  <td class="num ok">1门</td><td>AL 数学(85)</td></tr><tr><td>向语时</td><td class="num">5</td><td class="num">70.0</td>
+                  <td class="num ok">1门</td><td>AL 数学(81)</td></tr><tr><td>胡彦煊</td><td class="num">5</td><td class="num">68.8</td>
+                  <td class="num ok">2门</td><td>AL 化学(88)</td></tr><tr><td>朱子涵</td><td class="num">4</td><td class="num">64.2</td>
+                  <td class="num ok">0门</td><td>AL 中文(70)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>周家烨</td><td class="num">5</td><td class="num">33.2</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>AL 英语(11)、AS 物理(29)、AL 中文(30)</td></tr><tr><td>何言乐</td><td class="num">3</td><td class="num">21.3</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 数学(0)、AL 英语(20)、AL 中文(44)</td></tr><tr><td>王俊驰</td><td class="num">5</td><td class="num">40.2</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 英语(0)、AL 化学(25)、AS 物理(48)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-11A2">
+          <div class="clshead"><div><h3>11A2 <span class="sys">AL·十一年级</span></h3>
+          <p class="meta">本次月考参考成绩 114 条</p></div>
+          <div class="statbar"><span><b>23</b>人</span><span>均分<b>64.3</b></span><span>及格<b>87.7%</b></span><span class="ok">不及格<b>12.3%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>23人大班及格率87.7%高居AL班前列，AL数学72.0、高数76.2、中文73.3多科稳在B以上，班风扎实、覆盖面广，是十一年级综合表现最突出的班级。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>AL 数学</td><td class="num">23人</td><td class="num">72.0</td>
+              <td class="num">9门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 5, 'A': 4, 'B': 7, 'C': 1, 'D': 1, 'E': 3, 'U': 2}"><span class="dseg" style="background:var(--g9);width:21.74%"></span><span class="dseg" style="background:var(--g8);width:17.39%"></span><span class="dseg" style="background:var(--g7);width:30.43%"></span><span class="dseg" style="background:var(--g6);width:4.35%"></span><span class="dseg" style="background:var(--g5);width:4.35%"></span><span class="dseg" style="background:var(--g4);width:13.04%"></span><span class="dseg" style="background:var(--g2);width:8.70%"></span></div></td></tr><tr><td>AL 英语</td><td class="num">23人</td><td class="num">63.7</td>
+              <td class="num">4门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 3, 'B': 5, 'C': 4, 'D': 6, 'E': 4, 'U': 0}"><span class="dseg" style="background:var(--g9);width:4.35%"></span><span class="dseg" style="background:var(--g8);width:13.04%"></span><span class="dseg" style="background:var(--g7);width:21.74%"></span><span class="dseg" style="background:var(--g6);width:17.39%"></span><span class="dseg" style="background:var(--g5);width:26.09%"></span><span class="dseg" style="background:var(--g4);width:17.39%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AS 物理</td><td class="num">13人</td><td class="num">46.8</td>
+              <td class="num">1门</td><td class="num warn-bold">6人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 2, 'D': 1, 'E': 2, 'U': 6}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:7.69%"></span><span class="dseg" style="background:var(--g7);width:7.69%"></span><span class="dseg" style="background:var(--g6);width:15.38%"></span><span class="dseg" style="background:var(--g5);width:7.69%"></span><span class="dseg" style="background:var(--g4);width:15.38%"></span><span class="dseg" style="background:var(--g2);width:46.15%"></span></div></td></tr><tr><td>AL 中文</td><td class="num">12人</td><td class="num">73.3</td>
+              <td class="num">5门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 4, 'B': 4, 'C': 1, 'D': 2, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:8.33%"></span><span class="dseg" style="background:var(--g8);width:33.33%"></span><span class="dseg" style="background:var(--g7);width:33.33%"></span><span class="dseg" style="background:var(--g6);width:8.33%"></span><span class="dseg" style="background:var(--g5);width:16.67%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 化学</td><td class="num">10人</td><td class="num">59.1</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 2, 'D': 5, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:10.00%"></span><span class="dseg" style="background:var(--g7);width:10.00%"></span><span class="dseg" style="background:var(--g6);width:20.00%"></span><span class="dseg" style="background:var(--g5);width:50.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:10.00%"></span></div></td></tr><tr><td>AL 高数</td><td class="num">8人</td><td class="num">76.2</td>
+              <td class="num">4门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 3, 'A': 1, 'B': 2, 'C': 1, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:37.50%"></span><span class="dseg" style="background:var(--g8);width:12.50%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:12.50%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:12.50%"></span></div></td></tr><tr><td>AL 生物</td><td class="num">6人</td><td class="num">46.5</td>
+              <td class="num">1门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 0, 'D': 1, 'E': 0, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:16.67%"></span><span class="dseg" style="background:var(--g7);width:16.67%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:16.67%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:50.00%"></span></div></td></tr><tr><td>AL 计算机科学</td><td class="num">4人</td><td class="num">60.8</td>
+              <td class="num">2门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 0, 'C': 0, 'D': 0, 'E': 1, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:25.00%"></span><span class="dseg" style="background:var(--g2);width:25.00%"></span></div></td></tr><tr><td>AS 地理</td><td class="num">1人</td><td class="num">64.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:100.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>陈思岐</td><td class="num">6</td><td class="num">84.3</td>
+                  <td class="num ok">4门</td><td>AL 高数(100)</td></tr><tr><td>张瀚元</td><td class="num">6</td><td class="num">83.2</td>
+                  <td class="num ok">3门</td><td>AL 数学(100)</td></tr><tr><td>苏乐琪</td><td class="num">5</td><td class="num">82.2</td>
+                  <td class="num ok">3门</td><td>AL 英语(100)</td></tr><tr><td>曹淑怡</td><td class="num">6</td><td class="num">73.5</td>
+                  <td class="num ok">3门</td><td>AL 数学(88)</td></tr><tr><td>刘瀚</td><td class="num">6</td><td class="num">73.0</td>
+                  <td class="num ok">2门</td><td>AL 高数(87)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>林可</td><td class="num">6</td><td class="num">49.5</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 计算机科学(27)、AS 物理(38)、AL 数学(44)</td></tr><tr><td>马梓淇</td><td class="num">6</td><td class="num">47.2</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 生物(23)、AL 化学(33)、AL 数学(40)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-11D1">
+          <div class="clshead"><div><h3>11D1 <span class="sys">DSE·十一年级</span></h3>
+          <p class="meta">本次月考参考成绩 26 条</p></div>
+          <div class="statbar"><span><b>4</b>人</span><span>均分<b>57.7</b></span><span>及格<b>73.1%</b></span><span class="mid">不及格<b>26.9%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>DSE必修数学75.0、延伸数学M2高达95.0、物理72.5，数理优势格外出彩。4人小班便于深耕辅导，语文英文补强后冲高分指日可待，DSE赛道上很有冲劲。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>DSE英國語文</td><td class="num">4人</td><td class="num">29.6</td>
+              <td class="num">0门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 1, 'E': 0, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:75.00%"></span></div></td></tr><tr><td>IG 物理</td><td class="num">4人</td><td class="num">72.5</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 0, 'B': 1, 'C': 1, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:25.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 必修數學</td><td class="num">4人</td><td class="num">75.0</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 2, 'A': 0, 'B': 0, 'C': 1, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:50.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 公民與社會發展</td><td class="num">4人</td><td class="num">60.2</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 3, 'C': 0, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:75.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:25.00%"></span></div></td></tr><tr><td>DSE中國語文</td><td class="num">4人</td><td class="num">39.0</td>
+              <td class="num">0门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 1, 'E': 0, 'U': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:50.00%"></span></div></td></tr><tr><td>DSE 化學</td><td class="num">3人</td><td class="num">47.9</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 0, 'D': 1, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:33.33%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:33.33%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:33.33%"></span></div></td></tr><tr><td>DSE 延伸數學M2</td><td class="num">2人</td><td class="num">95.0</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 2, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:100.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 經濟</td><td class="num">1人</td><td class="num">62.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:100.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>吴海诚</td><td class="num">7</td><td class="num">78.7</td>
+                  <td class="num ok">3门</td><td>IG 物理(99)</td></tr><tr><td>黄文邦</td><td class="num">7</td><td class="num">68.9</td>
+                  <td class="num ok">2门</td><td>DSE 延伸數學M2(95)</td></tr><tr><td>陈炯量</td><td class="num">6</td><td class="num">51.2</td>
+                  <td class="num ok">0门</td><td>DSE 公民與社會發展(71)</td></tr><tr><td>黄天佑</td><td class="num">6</td><td class="num">26.8</td>
+                  <td class="num ok">0门</td><td>IG 物理(56)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>黄天佑</td><td class="num">6</td><td class="num">26.8</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>DSE中國語文(5)、DSE英國語文(10)、DSE 化學(19)</td></tr><tr><td>陈炯量</td><td class="num">6</td><td class="num">51.2</td>
+                  <td class="num warn">2科</td>
+                  <td>DSE英國語文(20)、DSE中國語文(29)、DSE 必修數學(60)</td></tr></tbody></table></div></div></div></article></section><section class="year" id="十二年级">
+    <h2>十二年级</h2>
+    <div class="tablewrap"><table class="ov">
+      <caption>班级总体对比（十二年级）</caption>
+      <thead><tr><th>班级</th><th>体系</th><th>人数</th><th>总体均分</th><th>A*/A占比</th><th>B以上占比</th><th>及格率</th><th>不及格率</th></tr></thead>
+      <tbody><tr>
+        <td><a class="clslink" href="#cls-12A1">12A1</a></td>
+        <td>AL</td>
+        <td>6人</td>
+        <td class="num">79.4</td>
+        <td class="num">50.0%</td>
+        <td class="num">75.0%</td>
+        <td class="num">100.0%</td>
+        <td class="num badge-ok">0.0%</td></tr><tr>
+        <td><a class="clslink" href="#cls-12A2">12A2</a></td>
+        <td>AL</td>
+        <td>6人</td>
+        <td class="num">44.4</td>
+        <td class="num">9.5%</td>
+        <td class="num">19.0%</td>
+        <td class="num">47.6%</td>
+        <td class="num badge-warn">52.4%</td></tr><tr>
+        <td><a class="clslink" href="#cls-12A3">12A3</a></td>
+        <td>AL</td>
+        <td>17人</td>
+        <td class="num">50.9</td>
+        <td class="num">11.3%</td>
+        <td class="num">22.6%</td>
+        <td class="num">75.8%</td>
+        <td class="num badge-mid">24.2%</td></tr><tr>
+        <td><a class="clslink" href="#cls-12A4">12A4</a></td>
+        <td>AL</td>
+        <td>15人</td>
+        <td class="num">63.8</td>
+        <td class="num">21.6%</td>
+        <td class="num">51.0%</td>
+        <td class="num">86.3%</td>
+        <td class="num badge-ok">13.7%</td></tr><tr>
+        <td><a class="clslink" href="#cls-12D1">12D1</a></td>
+        <td>DSE</td>
+        <td>3人</td>
+        <td class="num">68.6</td>
+        <td class="num">14.3%</td>
+        <td class="num">57.1%</td>
+        <td class="num">100.0%</td>
+        <td class="num badge-ok">0.0%</td></tr></tbody></table></div><article class="cls" id="cls-12A1">
+          <div class="clshead"><div><h3>12A1 <span class="sys">AL·十二年级</span></h3>
+          <p class="meta">本次月考参考成绩 16 条</p></div>
+          <div class="statbar"><span><b>6</b>人</span><span>均分<b>79.4</b></span><span>及格<b>100.0%</b></span><span class="ok">不及格<b>0.0%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>全班均分79.4、及格率100%，高数89.2、化学82.3、物理75.7多科冲A，是全校学术表现的标杆班。毕业季状态堪称完美，保持节奏即可再创佳绩。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>AL 高数</td><td class="num">5人</td><td class="num">89.2</td>
+              <td class="num">4门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 4, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:80.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:20.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 物理</td><td class="num">3人</td><td class="num">75.7</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:33.33%"></span><span class="dseg" style="background:var(--g7);width:33.33%"></span><span class="dseg" style="background:var(--g6);width:33.33%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 化学</td><td class="num">3人</td><td class="num">82.3</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:66.67%"></span><span class="dseg" style="background:var(--g7);width:33.33%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 雅思英语</td><td class="num">2人</td><td class="num">65.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 0, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:50.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:50.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 生物</td><td class="num">1人</td><td class="num">83.0</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:100.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>徐浩荣</td><td class="num">1</td><td class="num">100.0</td>
+                  <td class="num ok">1门</td><td>AL 高数(100)</td></tr><tr><td>吴俊杰</td><td class="num">3</td><td class="num">89.7</td>
+                  <td class="num ok">3门</td><td>AL 高数(100)</td></tr><tr><td>赵秉萱</td><td class="num">3</td><td class="num">85.3</td>
+                  <td class="num ok">2门</td><td>AL 高数(90)</td></tr><tr><td>胡予瑞</td><td class="num">3</td><td class="num">74.7</td>
+                  <td class="num ok">1门</td><td>AL 高数(94)</td></tr><tr><td>杨景之</td><td class="num">3</td><td class="num">73.3</td>
+                  <td class="num ok">1门</td><td>AL 生物(83)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生</h4><p class="alldone">全班无2科及以上不及格学生 ✅</p></div></div></article><article class="cls" id="cls-12A2">
+          <div class="clshead"><div><h3>12A2 <span class="sys">AL·十二年级</span></h3>
+          <p class="meta">本次月考参考成绩 21 条</p></div>
+          <div class="statbar"><span><b>6</b>人</span><span>均分<b>44.4</b></span><span>及格<b>47.6%</b></span><span class="warn">不及格<b>52.4%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>高数71.7是班级的亮色，其余科目正在收尾爬坡。6人小班非常适合最后一学期冲刺补习，抓准雅思与理科学术薄弱项，毕业前完全有望再上一个台阶。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>AL 雅思英语</td><td class="num">5人</td><td class="num">33.6</td>
+              <td class="num">0门</td><td class="num warn-bold">5人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 5}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:100.00%"></span></div></td></tr><tr><td>AL 数学</td><td class="num">5人</td><td class="num">47.8</td>
+              <td class="num">1门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 1, 'D': 1, 'E': 0, 'U': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:20.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:20.00%"></span><span class="dseg" style="background:var(--g5);width:20.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:40.00%"></span></div></td></tr><tr><td>AL 物理</td><td class="num">4人</td><td class="num">31.8</td>
+              <td class="num">0门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:75.00%"></span></div></td></tr><tr><td>AL 高数</td><td class="num">3人</td><td class="num">71.7</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 0, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:33.33%"></span><span class="dseg" style="background:var(--g7);width:33.33%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:33.33%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 化学</td><td class="num">2人</td><td class="num">33.5</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 1, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:50.00%"></span><span class="dseg" style="background:var(--g2);width:50.00%"></span></div></td></tr><tr><td>AL 生物</td><td class="num">1人</td><td class="num">56.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:100.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>欧子霖</td><td class="num">4</td><td class="num">54.6</td>
+                  <td class="num ok">1门</td><td>AL 高数(80)</td></tr><tr><td>任嘉欣</td><td class="num">5</td><td class="num">54.0</td>
+                  <td class="num ok">0门</td><td>AL 高数(76)</td></tr><tr><td>余文昊</td><td class="num">4</td><td class="num">47.1</td>
+                  <td class="num ok">1门</td><td>AL 数学(81)</td></tr><tr><td>杨浩生</td><td class="num">4</td><td class="num">38.0</td>
+                  <td class="num ok">0门</td><td>AL 生物(56)</td></tr><tr><td>许瑞庭</td><td class="num">3</td><td class="num">34.8</td>
+                  <td class="num ok">0门</td><td>AL 数学(50)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>杨浩生</td><td class="num">4</td><td class="num">38.0</td>
+                  <td class="num warn-bold">3科</td>
+                  <td>AL 数学(23)、AL 雅思英语(35)、AL 物理(38)</td></tr><tr><td>欧子霖</td><td class="num">4</td><td class="num">54.6</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 数学(25)、AL 雅思英语(38)、AL 物理(76)</td></tr><tr><td>许瑞庭</td><td class="num">3</td><td class="num">34.8</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 化学(19)、AL 雅思英语(35)、AL 数学(50)</td></tr><tr><td>余文昊</td><td class="num">4</td><td class="num">47.1</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 物理(13)、AL 雅思英语(35)、AL 高数(59)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-12A3">
+          <div class="clshead"><div><h3>12A3 <span class="sys">AL·十二年级</span></h3>
+          <p class="meta">本次月考参考成绩 62 条</p></div>
+          <div class="statbar"><span><b>17</b>人</span><span>均分<b>50.9</b></span><span>及格<b>75.8%</b></span><span class="mid">不及格<b>24.2%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>AL经济65.4全班最高，数学49.2也接近及格线，整体稳定在60上下。班内既有尖子领跑、也有待补空间，聚焦数理化主干做最后冲刺，毕业复习的上升空间仍在。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>AL 数学</td><td class="num">14人</td><td class="num">49.2</td>
+              <td class="num">2门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 1, 'C': 1, 'D': 2, 'E': 6, 'U': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:14.29%"></span><span class="dseg" style="background:var(--g7);width:7.14%"></span><span class="dseg" style="background:var(--g6);width:7.14%"></span><span class="dseg" style="background:var(--g5);width:14.29%"></span><span class="dseg" style="background:var(--g4);width:42.86%"></span><span class="dseg" style="background:var(--g2);width:14.29%"></span></div></td></tr><tr><td>AL 物理</td><td class="num">10人</td><td class="num">33.7</td>
+              <td class="num">0门</td><td class="num warn-bold">5人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 1, 'D': 0, 'E': 3, 'U': 5}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:10.00%"></span><span class="dseg" style="background:var(--g6);width:10.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:30.00%"></span><span class="dseg" style="background:var(--g2);width:50.00%"></span></div></td></tr><tr><td>AL 经济</td><td class="num">7人</td><td class="num">65.4</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 1, 'A': 0, 'B': 2, 'C': 2, 'D': 1, 'E': 1, 'U': 0}"><span class="dseg" style="background:var(--g9);width:14.29%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:28.57%"></span><span class="dseg" style="background:var(--g6);width:28.57%"></span><span class="dseg" style="background:var(--g5);width:14.29%"></span><span class="dseg" style="background:var(--g4);width:14.29%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 雅思英语</td><td class="num">6人</td><td class="num">42.5</td>
+              <td class="num">0门</td><td class="num warn">2人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 2, 'E': 2, 'U': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:33.33%"></span><span class="dseg" style="background:var(--g4);width:33.33%"></span><span class="dseg" style="background:var(--g2);width:33.33%"></span></div></td></tr><tr><td>雅思英语</td><td class="num">5人</td><td class="num">61.0</td>
+              <td class="num">2门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 0, 'C': 1, 'D': 1, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:40.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:20.00%"></span><span class="dseg" style="background:var(--g5);width:20.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:20.00%"></span></div></td></tr><tr><td>AL 化学</td><td class="num">4人</td><td class="num">32.2</td>
+              <td class="num">0门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 1, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:25.00%"></span><span class="dseg" style="background:var(--g2);width:75.00%"></span></div></td></tr><tr><td>AL 生物</td><td class="num">2人</td><td class="num">42.5</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:50.00%"></span></div></td></tr><tr><td>AL 计算机科学</td><td class="num">2人</td><td class="num">60.0</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:50.00%"></span></div></td></tr><tr><td>AL 商务</td><td class="num">1人</td><td class="num">55.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 1, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:100.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>李梓鸣</td><td class="num">2</td><td class="num">70.5</td>
+                  <td class="num ok">0门</td><td>AL 数学(71)</td></tr><tr><td>周芷萱</td><td class="num">4</td><td class="num">68.5</td>
+                  <td class="num ok">0门</td><td>AL 经济(74)</td></tr><tr><td>倪奕</td><td class="num">4</td><td class="num">65.8</td>
+                  <td class="num ok">2门</td><td>AL 经济(93)</td></tr><tr><td>唐子宸</td><td class="num">2</td><td class="num">62.5</td>
+                  <td class="num ok">1门</td><td>AL 计算机科学(85)</td></tr><tr><td>邓可欣</td><td class="num">5</td><td class="num">61.2</td>
+                  <td class="num ok">2门</td><td>AL 数学(81)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>周诗颖</td><td class="num">5</td><td class="num">30.0</td>
+                  <td class="num warn-bold">4科</td>
+                  <td>AL 数学(12)、AL 物理(20)、AL 雅思英语(30)</td></tr><tr><td>李其睿</td><td class="num">5</td><td class="num">49.4</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 化学(26)、AL 雅思英语(35)、AL 数学(43)</td></tr><tr><td>谢昕玥</td><td class="num">4</td><td class="num">23.2</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 物理(0)、AL 生物(0)、AL 雅思英语(40)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-12A4">
+          <div class="clshead"><div><h3>12A4 <span class="sys">AL·十二年级</span></h3>
+          <p class="meta">本次月考参考成绩 51 条</p></div>
+          <div class="statbar"><span><b>15</b>人</span><span>均分<b>63.8</b></span><span>及格<b>86.3%</b></span><span class="ok">不及格<b>13.7%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>数学73.8、物理74.8、经济65.0多科冲上B+，及格率86.3%是毕业班最稳的班级之一。整体学风积极向上，毕业冲刺阶段的表现非常可期。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>AL 数学</td><td class="num">14人</td><td class="num">73.8</td>
+              <td class="num">7门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 4, 'A': 3, 'B': 4, 'C': 0, 'D': 0, 'E': 2, 'U': 1}"><span class="dseg" style="background:var(--g9);width:28.57%"></span><span class="dseg" style="background:var(--g8);width:21.43%"></span><span class="dseg" style="background:var(--g7);width:28.57%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:14.29%"></span><span class="dseg" style="background:var(--g2);width:7.14%"></span></div></td></tr><tr><td>AL 化学</td><td class="num">10人</td><td class="num">59.9</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 4, 'C': 1, 'D': 1, 'E': 2, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:10.00%"></span><span class="dseg" style="background:var(--g7);width:40.00%"></span><span class="dseg" style="background:var(--g6);width:10.00%"></span><span class="dseg" style="background:var(--g5);width:10.00%"></span><span class="dseg" style="background:var(--g4);width:20.00%"></span><span class="dseg" style="background:var(--g2);width:10.00%"></span></div></td></tr><tr><td>AL 经济</td><td class="num">6人</td><td class="num">65.0</td>
+              <td class="num">1门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 2, 'C': 1, 'D': 1, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:16.67%"></span><span class="dseg" style="background:var(--g7);width:33.33%"></span><span class="dseg" style="background:var(--g6);width:16.67%"></span><span class="dseg" style="background:var(--g5);width:16.67%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:16.67%"></span></div></td></tr><tr><td>AL 物理</td><td class="num">4人</td><td class="num">74.8</td>
+              <td class="num">2门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 2, 'B': 1, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:25.00%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 雅思英语</td><td class="num">4人</td><td class="num">37.5</td>
+              <td class="num">0门</td><td class="num warn-bold">3人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 1, 'E': 0, 'U': 3}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:25.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:75.00%"></span></div></td></tr><tr><td>雅思英语</td><td class="num">3人</td><td class="num">63.3</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 3, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:100.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 商务</td><td class="num">2人</td><td class="num">59.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 0, 'D': 0, 'E': 1, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:50.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:50.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>AL 生物</td><td class="num">1人</td><td class="num">4.0</td>
+              <td class="num">0门</td><td class="num warn">1人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'U': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:100.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>胡可瑜</td><td class="num">3</td><td class="num">84.7</td>
+                  <td class="num ok">2门</td><td>AL 数学(100)</td></tr><tr><td>彭熙悦</td><td class="num">2</td><td class="num">84.0</td>
+                  <td class="num ok">2门</td><td>AL 化学(87)</td></tr><tr><td>易媛</td><td class="num">2</td><td class="num">76.0</td>
+                  <td class="num ok">0门</td><td>AL 化学(78)</td></tr><tr><td>唐子恒</td><td class="num">3</td><td class="num">75.0</td>
+                  <td class="num ok">2门</td><td>AL 数学(100)</td></tr><tr><td>胡予琪</td><td class="num">4</td><td class="num">73.2</td>
+                  <td class="num ok">1门</td><td>AL 数学(95)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生 <span class="subnote">（2科及以上不及格，按不及格科数排序）</span></h4>
+              <div class="tablewrap"><table class="watch"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>不及格</th><th>薄弱科目（最低分）</th></tr></thead>
+              <tbody><tr><td>阮龙秀如</td><td class="num">3</td><td class="num">37.3</td>
+                  <td class="num warn">2科</td>
+                  <td>AL 数学(0)、AL 经济(37)、AL 商务(75)</td></tr></tbody></table></div></div></div></article><article class="cls" id="cls-12D1">
+          <div class="clshead"><div><h3>12D1 <span class="sys">DSE·十二年级</span></h3>
+          <p class="meta">本次月考参考成绩 7 条</p></div>
+          <div class="statbar"><span><b>3</b>人</span><span>均分<b>68.6</b></span><span>及格<b>100.0%</b></span><span class="ok">不及格<b>0.0%</b></span></div></div>
+          <div class="comment">💬 <b>班情点评：</b>3人小班必修数学75.0、经济78.0、公民与社会发展79.0全面开花，及格率100%，DSE毕业冲刺状态极佳，保持住就是最好的节奏。</div>
+          <div class="subjfull"><div class="col"><h4>分科表现</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>科目</th><th>人数</th><th>均分</th><th>A*/A</th><th>不及格</th><th>等级分布</th></tr></thead>
+          <tbody><tr><td>DSE 必修數學</td><td class="num">2人</td><td class="num">75.0</td>
+              <td class="num">1门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 1, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:50.00%"></span><span class="dseg" style="background:var(--g7);width:50.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 經濟</td><td class="num">1人</td><td class="num">78.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:100.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 生物</td><td class="num">1人</td><td class="num">65.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:100.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 化學</td><td class="num">1人</td><td class="num">48.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 1, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:100.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE 公民與社會發展</td><td class="num">1人</td><td class="num">79.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 1, 'C': 0, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:100.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr><td>DSE中國語文</td><td class="num">1人</td><td class="num">60.0</td>
+              <td class="num">0门</td><td class="num ">0人</td>
+              <td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 0, 'A': 0, 'B': 0, 'C': 1, 'D': 0, 'E': 0, 'U': 0}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:100.00%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div></div></div>
+          <div class="cols"><div class="col"><h4>班级优秀学生 <span class="subnote">（个人均分前5名）</span></h4>
+              <div class="tablewrap"><table class="good"><thead><tr><th>学生</th><th>科目数</th><th>个人均分</th><th>A/A*</th><th>最强科目</th></tr></thead>
+              <tbody><tr><td>何雨泽</td><td class="num">2</td><td class="num">74.0</td>
+                  <td class="num ok">0门</td><td>DSE 經濟(78)</td></tr><tr><td>张熠安</td><td class="num">5</td><td class="num">66.4</td>
+                  <td class="num ok">1门</td><td>DSE 必修數學(80)</td></tr></tbody></table></div></div><div class="col"><h4>需重点关注学生</h4><p class="alldone">全班无2科及以上不及格学生 ✅</p></div></div></article></section><section class="year" id="分层统计">
+  <h2>📊 全年级英语 / 数学分层统计</h2>
+  <p style="color:var(--muted);margin:0">基于总数据表中的真实分层教学班（如「10年级数学1班/2班」），按 9、10、11 年级展示英语、数学各被分出的层班及其成绩表现（不含DSE班）。人数、均分、及格率、A*/A及A*→U等级分布，请以分层班为准横向参考；「学生（成绩）」列出该层班每位学生的本层成绩。</p>
+  <div class="cols"><div class="col"><h4>九年级</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>分层班</th><th>人数</th><th>均分</th><th>及格率</th><th>A*/A</th><th>等级分布</th></tr></thead>
+          <tbody><tr>
+              <td><b>G9英语1班</b></td>
+              <td class="num">15人</td>
+              <td class="num">74.1</td><td class="num">100.0%</td>
+              <td class="num">6人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'B': 4, 'C': 4, 'A': 5, 'E': 1, 'A*': 1}"><span class="dseg" style="background:var(--g9);width:6.67%"></span><span class="dseg" style="background:var(--g8);width:33.33%"></span><span class="dseg" style="background:var(--g7);width:26.67%"></span><span class="dseg" style="background:var(--g6);width:26.67%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:6.67%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr>
+              <td><b>G9英语2班</b></td>
+              <td class="num">14人</td>
+              <td class="num">44.6</td><td class="num">64.3%</td>
+              <td class="num">1人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'E': 3, 'U': 5, 'D': 2, 'C': 3, 'A': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:7.14%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:21.43%"></span><span class="dseg" style="background:var(--g5);width:14.29%"></span><span class="dseg" style="background:var(--g4);width:21.43%"></span><span class="dseg" style="background:var(--g2);width:35.71%"></span></div></td></tr></tbody></table></div>
+          <div class="lcmt">💬 <b>九年级英语分层点评：</b>本年级该科目分2个层班（“G9英语1班”、“G9英语2班”）。G9英语2班均分44.6（及格率64.3%），冲及格、稳中求进；G9英语1班均分74.1（及格率100.0%），整体扎实、冲A*/A前景明朗。首尾相差29.5分，层次梯度清晰，低层班紧抓薄弱项、高层班稳住拔高，是带动全年级该科目整体上台阶的关键。</div></div><div class="col"><h4>十年级</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>分层班</th><th>人数</th><th>均分</th><th>及格率</th><th>A*/A</th><th>等级分布</th></tr></thead>
+          <tbody><tr>
+              <td><b>G10英语1班</b></td>
+              <td class="num">7人</td>
+              <td class="num">75.4</td><td class="num">100.0%</td>
+              <td class="num">2人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'B': 4, 'A': 2, 'C': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:28.57%"></span><span class="dseg" style="background:var(--g7);width:57.14%"></span><span class="dseg" style="background:var(--g6);width:14.29%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr>
+              <td><b>G10英语2班</b></td>
+              <td class="num">16人</td>
+              <td class="num">74.0</td><td class="num">100.0%</td>
+              <td class="num">7人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'A': 5, 'C': 4, 'D': 2, 'B': 3, 'A*': 2}"><span class="dseg" style="background:var(--g9);width:12.50%"></span><span class="dseg" style="background:var(--g8);width:31.25%"></span><span class="dseg" style="background:var(--g7);width:18.75%"></span><span class="dseg" style="background:var(--g6);width:25.00%"></span><span class="dseg" style="background:var(--g5);width:12.50%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr>
+              <td><b>G10英语3班</b></td>
+              <td class="num">21人</td>
+              <td class="num">47.8</td><td class="num">66.7%</td>
+              <td class="num">1人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'D': 8, 'U': 7, 'B': 2, 'A': 1, 'E': 1, 'C': 2}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:4.76%"></span><span class="dseg" style="background:var(--g7);width:9.52%"></span><span class="dseg" style="background:var(--g6);width:9.52%"></span><span class="dseg" style="background:var(--g5);width:38.10%"></span><span class="dseg" style="background:var(--g4);width:4.76%"></span><span class="dseg" style="background:var(--g2);width:33.33%"></span></div></td></tr></tbody></table></div>
+          <div class="lcmt">💬 <b>十年级英语分层点评：</b>本年级该科目分3个层班（“G10英语1班”、“G10英语2班”、“G10英语3班”）。G10英语3班均分47.8（及格率66.7%），冲及格、稳中求进；G10英语1班均分75.4（及格率100.0%），整体扎实、冲A*/A前景明朗。首尾相差27.6分，层次梯度清晰，低层班紧抓薄弱项、高层班稳住拔高，是带动全年级该科目整体上台阶的关键。</div></div><div class="col"><h4>十一年级</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>分层班</th><th>人数</th><th>均分</th><th>及格率</th><th>A*/A</th><th>等级分布</th></tr></thead>
+          <tbody><tr>
+              <td><b>G11英语1班</b></td>
+              <td class="num">16人</td>
+              <td class="num">67.2</td><td class="num">100.0%</td>
+              <td class="num">1人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'B': 5, 'D': 3, 'C': 7, 'A': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:6.25%"></span><span class="dseg" style="background:var(--g7);width:31.25%"></span><span class="dseg" style="background:var(--g6);width:43.75%"></span><span class="dseg" style="background:var(--g5);width:18.75%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr>
+              <td><b>G11英语2班</b></td>
+              <td class="num">16人</td>
+              <td class="num">44.9</td><td class="num">75.0%</td>
+              <td class="num">0人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'D': 7, 'E': 2, 'C': 3, 'U': 4}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:18.75%"></span><span class="dseg" style="background:var(--g5);width:43.75%"></span><span class="dseg" style="background:var(--g4);width:12.50%"></span><span class="dseg" style="background:var(--g2);width:25.00%"></span></div></td></tr></tbody></table></div>
+          <div class="lcmt">💬 <b>十一年级英语分层点评：</b>本年级该科目分2个层班（“G11英语1班”、“G11英语2班”）。G11英语2班均分44.9（及格率75.0%），冲及格、稳中求进；G11英语1班均分67.2（及格率100.0%），整体扎实、冲A*/A前景明朗。首尾相差22.3分，层次梯度清晰，低层班紧抓薄弱项、高层班稳住拔高，是带动全年级该科目整体上台阶的关键。</div></div></div>
+  <div class="cols"><div class="col"><h4>九年级</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>分层班</th><th>人数</th><th>均分</th><th>及格率</th><th>A*/A</th><th>等级分布</th></tr></thead>
+          <tbody><tr>
+              <td><b>G9数学1班</b></td>
+              <td class="num">15人</td>
+              <td class="num">34.5</td><td class="num">40.0%</td>
+              <td class="num">1人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'E': 2, 'U': 9, 'A*': 1, 'D': 3}"><span class="dseg" style="background:var(--g9);width:6.67%"></span><span class="dseg" style="background:var(--g8);width:0.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:0.00%"></span><span class="dseg" style="background:var(--g5);width:20.00%"></span><span class="dseg" style="background:var(--g4);width:13.33%"></span><span class="dseg" style="background:var(--g2);width:60.00%"></span></div></td></tr><tr>
+              <td><b>G9数学2班</b></td>
+              <td class="num">14人</td>
+              <td class="num">77.6</td><td class="num">100.0%</td>
+              <td class="num">7人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 5, 'C': 5, 'A': 2, 'D': 2}"><span class="dseg" style="background:var(--g9);width:35.71%"></span><span class="dseg" style="background:var(--g8);width:14.29%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:35.71%"></span><span class="dseg" style="background:var(--g5);width:14.29%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr></tbody></table></div>
+          <div class="lcmt">💬 <b>九年级数学分层点评：</b>本年级该科目分2个层班（“G9数学1班”、“G9数学2班”）。G9数学1班均分34.5（及格率40.0%），补基础、托底拉平；G9数学2班均分77.6（及格率100.0%），整体扎实、冲A*/A前景明朗。首尾相差43.1分，层次梯度清晰，低层班紧抓薄弱项、高层班稳住拔高，是带动全年级该科目整体上台阶的关键。</div></div><div class="col"><h4>十年级</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>分层班</th><th>人数</th><th>均分</th><th>及格率</th><th>A*/A</th><th>等级分布</th></tr></thead>
+          <tbody><tr>
+              <td><b>G10数学1班</b></td>
+              <td class="num">24人</td>
+              <td class="num">18.2</td><td class="num">8.3%</td>
+              <td class="num">1人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'U': 22, 'C': 1, 'A': 1}"><span class="dseg" style="background:var(--g9);width:0.00%"></span><span class="dseg" style="background:var(--g8);width:4.17%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:4.17%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:91.67%"></span></div></td></tr><tr>
+              <td><b>G10数学2班</b></td>
+              <td class="num">20人</td>
+              <td class="num">54.5</td><td class="num">65.0%</td>
+              <td class="num">6人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'C': 3, 'U': 7, 'A*': 3, 'D': 2, 'E': 2, 'A': 3}"><span class="dseg" style="background:var(--g9);width:15.00%"></span><span class="dseg" style="background:var(--g8);width:15.00%"></span><span class="dseg" style="background:var(--g7);width:0.00%"></span><span class="dseg" style="background:var(--g6);width:15.00%"></span><span class="dseg" style="background:var(--g5);width:10.00%"></span><span class="dseg" style="background:var(--g4);width:10.00%"></span><span class="dseg" style="background:var(--g2);width:35.00%"></span></div></td></tr></tbody></table></div>
+          <div class="lcmt">💬 <b>十年级数学分层点评：</b>本年级该科目分2个层班（“G10数学1班”、“G10数学2班”）。G10数学1班均分18.2（及格率8.3%），补基础、托底拉平；G10数学2班均分54.5（及格率65.0%），稳中有进、仍有上升空间。首尾相差36.3分，层次梯度清晰，低层班紧抓薄弱项、高层班稳住拔高，是带动全年级该科目整体上台阶的关键。</div></div><div class="col"><h4>十一年级</h4>
+          <div class="tablewrap"><table class="subj"><thead><tr><th>分层班</th><th>人数</th><th>均分</th><th>及格率</th><th>A*/A</th><th>等级分布</th></tr></thead>
+          <tbody><tr>
+              <td><b>G11数学1班</b></td>
+              <td class="num">13人</td>
+              <td class="num">79.4</td><td class="num">100.0%</td>
+              <td class="num">6人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 3, 'C': 2, 'B': 5, 'A': 3}"><span class="dseg" style="background:var(--g9);width:23.08%"></span><span class="dseg" style="background:var(--g8);width:23.08%"></span><span class="dseg" style="background:var(--g7);width:38.46%"></span><span class="dseg" style="background:var(--g6);width:15.38%"></span><span class="dseg" style="background:var(--g5);width:0.00%"></span><span class="dseg" style="background:var(--g4);width:0.00%"></span><span class="dseg" style="background:var(--g2);width:0.00%"></span></div></td></tr><tr>
+              <td><b>G11数学2班</b></td>
+              <td class="num">21人</td>
+              <td class="num">64.0</td><td class="num">85.7%</td>
+              <td class="num">7人</td><td class="dist"><div class="db" role="img" aria-label="等级分布 {'A*': 3, 'A': 4, 'D': 3, 'B': 4, 'U': 3, 'C': 1, 'E': 3}"><span class="dseg" style="background:var(--g9);width:14.29%"></span><span class="dseg" style="background:var(--g8);width:19.05%"></span><span class="dseg" style="background:var(--g7);width:19.05%"></span><span class="dseg" style="background:var(--g6);width:4.76%"></span><span class="dseg" style="background:var(--g5);width:14.29%"></span><span class="dseg" style="background:var(--g4);width:14.29%"></span><span class="dseg" style="background:var(--g2);width:14.29%"></span></div></td></tr></tbody></table></div>
+          <div class="lcmt">💬 <b>十一年级数学分层点评：</b>本年级该科目分2个层班（“G11数学1班”、“G11数学2班”）。G11数学2班均分64.0（及格率85.7%），巩固提升、向更高等级靠拢；G11数学1班均分79.4（及格率100.0%），整体扎实、冲A*/A前景明朗。首尾相差15.4分，层次梯度清晰，低层班紧抓薄弱项、高层班稳住拔高，是带动全年级该科目整体上台阶的关键。</div></div></div>
+</section>
+<footer><p>说明：① 及格线按学校 SCA 口径 40 分；② A*≥90、A≥80、B≥70、C≥60、D≥50、E≥40、40 以下记不及格（U）；③ 一个学生可能同时修读多门课程，均分按该班全部成绩计算；④ 每班"需重点关注学生"列有不及格科目者，按不及格科数排序。</p>
+<div class="legend"><b>等级分布色标：</b>
+<span><i style="background:var(--g9)"></i>A*</span><span><i style="background:var(--g8)"></i>A</span><span><i style="background:var(--g7)"></i>B</span><span><i style="background:var(--g6)"></i>C</span><span><i style="background:var(--g5)"></i>D</span><span><i style="background:var(--g4)"></i>E</span><span><i style="background:var(--g2)"></i>U(不及格)</span>
+</div></footer>
+</main>
+<script>
+const PW = {"9G1": "9824", "9G2": "0368", "10G1": "9796", "10G2": "3075", "10G3": "5524", "10D1": "9142", "11A1": "2945", "11A2": "3998", "11D1": "2808", "12A1": "8327", "12A2": "0836", "12A3": "9816", "12A4": "3748", "12D1": "8787"};
+const esc = t => String(t).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const lCls=document.getElementById('lockCls'), lPw=document.getElementById('lockPw'),
+      lBtn=document.getElementById('lockBtn'), lMsg=document.getElementById('lockMsg');
+let opts='<option value="">— 请选择班级 —</option>';
+const groups=[['九年级','9G1','9G2'],['十年级','10G1','10G2','10G3','10D1'],['十一年级','11A1','11A2','11D1'],['十二年级','12A1','12A2','12A3','12A4','12D1']];
+groups.forEach(g=>{
+  const grp=g.shift();
+  opts+='<optgroup label="'+grp+'">'+g.map(c=>'<option value="'+c+'">'+c+'（'+grp+'）</option>').join('')+'</optgroup>';
+});
+lCls.innerHTML=opts;
+function verify(){
+  const c=lCls.value;
+  if(!c){lMsg.textContent='请先选择班级';lMsg.className='lmsg err';return;}
+  const p=lPw.value.trim();
+  if(p.length!==4){lMsg.textContent='请输入4位数字密码';lMsg.className='lmsg err';return;}
+  if(p===PW[c]){
+    lMsg.textContent='验证通过，正在进入…';lMsg.className='lmsg ok';
+    document.body.classList.remove('locked');
+    document.getElementById('lock').style.display='none';
+    setTimeout(()=>{window.scrollTo(0,0);},50);
+  }else{
+    lPw.value='';lMsg.textContent='密码错误，请重新输入';lMsg.className='lmsg err';lPw.focus();
+  }
+}
+lBtn.addEventListener('click',verify);
+lPw.addEventListener('keydown',e=>{if(e.key==='Enter')verify();});
+</script>
+</body></html>
