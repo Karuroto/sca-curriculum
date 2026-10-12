@@ -1,4 +1,5 @@
 
+
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -902,8 +903,21 @@ function verify(){
   if(p.length!==4){lMsg.textContent='请输入4位数字密码';lMsg.className='lmsg err';return;}
   if(p===PW[c]){
     lMsg.textContent='验证通过，正在进入…';lMsg.className='lmsg ok';
+    // 只展示当前班级信息：隐藏其他班、空年级区块、总览对比表、分层统计、导航
+    const secs=document.querySelectorAll('section.year');
+    secs.forEach(s=>{
+      const has=Array.from(s.querySelectorAll('article.cls')).some(a=>a.id==='cls-'+c);
+      s.style.display = has ? '' : 'none';
+    });
+    document.querySelectorAll('article.cls').forEach(a=>{ a.style.display = (a.id==='cls-'+c) ? '' : 'none'; });
+    document.querySelectorAll('table.ov').forEach(t=>{ t.closest('.tablewrap').style.display='none'; });
+    const lyr=document.getElementById('分层统计'); if(lyr) lyr.style.display='none';
+    const nav=document.getElementById('idx'); if(nav) nav.style.display='none';
     document.body.classList.remove('locked');
     document.getElementById('lock').style.display='none';
+    // 更新标题提示当前班级
+    const h1=document.querySelector('.htext h1');
+    if(h1) h1.textContent='行政班级月考成绩分析 · '+c;
     setTimeout(()=>{window.scrollTo(0,0);},50);
   }else{
     lPw.value='';lMsg.textContent='密码错误，请重新输入';lMsg.className='lmsg err';lPw.focus();
