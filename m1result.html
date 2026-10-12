@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>学生成绩查询器 · 广州SCA国际学校</title>
+<style>
+:root{--bg:#f5f3ee;--surface:#fff;--ink:#232019;--muted:#7a746a;--line:#e5e0d5;
+--g9:#0b6a4d;--g8:#2f8f5b;--g7:#7fae4a;--g6:#e0c341;--g5:#eea63a;--g4:#e07b2e;--g2:#c8452f;
+--ok:#0b6a4d;--mid:#b7791f;--warn:#c8452f;--sys:#6b5d43;--accent:#7a3e1d;--accent-ink:#fff;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;}
+header{background:var(--surface);border-bottom:1px solid var(--line);padding:20px clamp(16px,4vw,48px);}
+.htext h1{margin:0;font-size:clamp(20px,2.8vw,26px);}
+.htext p{margin:4px 0 0;color:var(--muted);font-size:13px;}
+main{padding:24px clamp(16px,4vw,48px) 60px;display:grid;gap:24px;max-width:1000px;margin:0 auto;}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px;}
+.step{display:grid;gap:8px;}
+.step label{font-weight:700;font-size:14px;color:var(--sys);display:flex;align-items:center;gap:6px;}
+.step label .num{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);align-items:center;justify-content:center;font-size:13px;}
+select{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:9px;font-size:15px;background:#fbfaf6;color:var(--ink);}
+select:focus{outline:2px solid var(--accent);outline-offset:1px;}
+select option:disabled{color:var(--muted)}
+.result{display:none;padding-top:2px;}
+.result.show{display:grid;gap:16px;}
+.shead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;}
+.shead h2{margin:0;font-size:22px}
+.shead .g{margin:0;color:var(--muted);font-size:14px}
+.sum{display:flex;gap:8px 22px;flex-wrap:wrap;background:#f4f0e8;border-radius:10px;padding:12px 16px;font-size:14px;color:var(--muted);}
+.sum b{color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;margin-left:4px}
+.tablewrap{overflow-x:auto;background:var(--surface);}
+table{border-collapse:collapse;width:100%;font-size:14px;}
+caption{caption-side:top;text-align:left;padding:10px 2px 8px;font-weight:600;font-size:15px;}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);}
+thead th{background:#f1eee7;font-weight:600;white-space:nowrap;}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-family:ui-monospace,Menlo,Consolas,monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700;}
+.badge.a{background:#dff0e6;color:#0b6a4d}
+.badge.f{background:#fbe4de;color:#c8452f}
+.pass{color:var(--ok);font-weight:600}.fail{color:var(--warn);font-weight:700}
+.ranks{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.ranksi{width:14px;height:14px;border-radius:4px;display:inline-block}
+.empty{color:var(--muted);padding:18px;text-align:center;background:#faf8f2;border-radius:10px;}
+.hint{color:var(--muted);font-size:13px;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:4px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+footer{border-top:1px solid var(--line);padding:18px clamp(16px,4vw,48px) 36px;color:var(--muted);font-size:13px;max-width:1000px;margin:0 auto;}
+@media(max-width:640px){.sum{gap:6px 14px}.shead{flex-direction:column;align-items:flex-start}}
+</style></head>
+<body>
+<header>
+  <div class="htext"><h1>🔍 学生成绩查询器</h1>
+  <p>广州SCA国际学校 · 2026年10月月考 · 先选班级，再选学生，即可查看该生全部科目成绩</p></div>
+</header>
+<main>
+  <div class="panel">
+    <div class="step"><label><span class="num">1</span>选择班级</label>
+      <select id="clsSel" aria-label="选择班级"><option value="">— 请选择班级 —</option></select>
+    </div>
+    <div class="step"><label><span class="num">2</span>选择学生</label>
+      <select id="stuSel" aria-label="选择学生" disabled><option value="">— 请先选择班级 —</option></select>
+    </div>
+  </div>
+
+  <section class="result" id="result" aria-live="polite"></section>
+</main>
+<footer>
+  <p>说明：① 及格线按学校 SCA 口径 40 分；② 等级 A*≥90、A≥80、B≥70、C≥60、D≥50、E≥40、40 以下记不及格（U）；③ 一名学生可能同时修读多门课程；④ 展示的成绩为该生本次月考所持有的全部科目成绩。</p>
+  <div class="legend"><b>等级色标：</b>
+  <span><i style="background:var(--g9)"></i>A*</span><span><i style="background:var(--g8)"></i>A</span><span><i style="background:var(--g7)"></i>B</span><span><i style="background:var(--g6)"></i>C</span><span><i style="background:var(--g5)"></i>D</span><span><i style="background:var(--g4)"></i>E</span><span><i style="background:var(--g2)"></i>U(不及格)</span>
+  </div>
+</footer>
+<script>
+const DATA = {"9G1": {"grade": "九年级", "students": [{"n": "张静沿", "sub": {"IG 物理": 50.0, "ESL 英语": 20.0, "IG 数学": 20.0, "IG 化学": 29.0, "IG 中文": 70.0}}, {"n": "郭皓铭", "sub": {"IG 物理": 55.0, "ESL 英语": 36.0, "IG 数学": 25.0, "IG 化学": 5.0}}, {"n": "温紫琳", "sub": {"IG 物理": 40.0, "ESL 英语": 12.0, "IG 数学": 10.0, "IG 化学": 7.0, "IG 中文": 90.0}}, {"n": "杨郑煌", "sub": {"IG 物理": 60.0, "ESL 英语": 80.0, "IG 数学": 2.0, "IG 化学": 0.0, "IG 中文": 93.0}}, {"n": "王战", "sub": {"IG 物理": 50.0, "ESL 英语": 12.0, "IG 数学": 63.0, "IG 化学": 18.0, "IG 中文": 50.0}}, {"n": "温嘉宏", "sub": {"IG 物理": 55.0, "ESL 英语": 44.0, "IG 数学": 30.0, "IG 化学": 36.0, "IG 中文": 93.0}}, {"n": "余明雍", "sub": {"IG 物理": 70.0, "ESL 英语": 52.0, "IG 数学": 34.0, "IG 化学": 2.0, "IG 中文": 96.0}}, {"n": "周娓浵", "sub": {"IG 物理": 50.0, "ESL 英语": 64.0, "IG 数学": 54.0, "IG 化学": 0.0, "IG 中文": 87.0, "IG 地理": 20.0}}, {"n": "李妮娜", "sub": {"IG 物理": 85.5, "IG 数学": 81.0, "ESL 英语": 80.0, "IG 化学": 33.0, "IG 中文": 88.0}}, {"n": "郑晨希", "sub": {"IG 物理": 70.0, "IG 数学": 68.0, "ESL 英语": 68.0, "IG 化学": 38.0, "IG 中文": 94.0}}, {"n": "刘玥彤", "sub": {"IG 物理": 93.5, "ESL 英语": 52.0, "IG 数学": 50.0, "IG 化学": 38.0, "IG 中文": 93.0}}, {"n": "孙婉瑜", "sub": {"IG 物理": 50.0, "ESL 英语": 60.0, "IG 数学": 50.0, "IG 化学": 13.0, "IG 中文": 80.0, "IG 地理": 47.0}}, {"n": "龚柯豪", "sub": {"IG 物理": 50.0, "ESL 英语": 48.0, "IG 数学": 43.0, "IG 化学": 47.0, "IG 中文": 98.0}}, {"n": "黄琪涵", "sub": {"IG 物理": 82.0, "IG 数学": 92.0, "ESL 英语": 68.0, "IG 化学": 56.0, "IG 中文": 97.0}}, {"n": "黄芊瑀", "sub": {"IG 物理": 81.0, "IG 数学": 96.0, "ESL 英语": 71.0, "IG 化学": 65.0, "IG 中文": 93.0, "IG 地理": 60.0}}, {"n": "刘亦凡", "sub": {"IG 物理": 100.0, "IG 生物": 97.0, "ESL 英语": 88.0, "IG 数学": 100.0, "IG 化学": 98.0, "IG 中文": 85.0}}, {"n": "罗扬", "sub": {"IG 物理": 86.0, "IG 数学": 100.0, "IG 生物": 74.0, "ESL 英语": 88.0, "IG 化学": 80.0, "IG 中文": 98.0}}, {"n": "吴博轩", "sub": {"IG 物理": 90.0, "IG 数学": 100.0, "ESL 英语": 80.0, "IG 化学": 80.0, "IG 中文": 94.0}}, {"n": "张艺凌", "sub": {"IG 物理": 85.0, "IG 数学": 99.0, "IG 生物": 61.0, "ESL 英语": 92.0, "IG 化学": 51.0, "IG 中文": 95.0}}]}, "9G2": {"grade": "九年级", "students": [{"n": "黄梓霆", "sub": {"IG 物理": 30.0, "IG 中文": 68.0, "ESL 英语": 32.0, "IG 数学": 5.0, "IG 化学": 18.0}}, {"n": "谢雨晴", "sub": {"IG 物理": 5.0, "IG 中文": 68.0, "ESL 英语": 48.0, "IG 数学": 25.0, "IG 化学": 9.0, "IG 地理": 27.0}}, {"n": "蔡尚恩", "sub": {"IG 物理": 30.0, "IG 中文": 64.0, "IG 化学": 0.0}}, {"n": "张奕成", "sub": {"IG 物理": 50.0, "IG 中文": 88.0, "IG 数学": 52.0, "ESL 英语": 64.0, "IG 化学": 31.0, "IG 地理": 33.0}}, {"n": "戴千泽", "sub": {"IG 物理": 60.0, "IG 中文": 80.0, "ESL 英语": 76.0, "IG 数学": 43.0, "IG 化学": 27.0}}, {"n": "廖天一", "sub": {"ESL 英语": 76.0, "IG 数学": 30.0}}, {"n": "凌小涵", "sub": {"IG 中文": 60.0, "IG 数学": 63.0, "ESL 英语": 48.0, "IG 化学": 16.0}}, {"n": "卢梓诚", "sub": {"IG 物理": 72.0, "IG 中文": 72.0, "IG 数学": 87.0, "ESL 英语": 80.0, "IG 化学": 33.0}}, {"n": "彭钧翰", "sub": {"IG 物理": 50.0, "IG 中文": 68.0, "IG 数学": 64.0, "ESL 英语": 60.0, "IG 化学": 38.0}}, {"n": "唐梓杨", "sub": {"IG 物理": 30.0, "IG 中文": 52.0, "ESL 英语": 64.0, "IG 数学": 50.0, "IG 化学": 40.0}}, {"n": "黄熙伦", "sub": {"IG 物理": 62.0, "IG 中文": 60.0, "IG 数学": 67.0, "ESL 英语": 72.0}}, {"n": "孟凡", "sub": {"IG 物理": 60.0}}]}, "10G1": {"grade": "十年级", "students": [{"n": "崔瑞峻", "sub": {"IG 经济": 43.0, "IG 化学": 18.0, "IG 物理": 19.0, "AL 英语": 46.0, "IG 中文": 90.0, "AS 数学": 6.0}}, {"n": "刘浩玄", "sub": {"IG 经济": 60.0, "IG 化学": 10.0, "IG 中文": 86.0, "ESL 英语": 53.0, "AS 数学": 35.0}}, {"n": "邓炜均", "sub": {"IG 经济": 47.0, "IG 化学": 25.0, "IG 物理": 67.0, "AS 数学": 13.0, "AL 英语": 63.0, "IG 中文": 88.0}}, {"n": "曾佳敏", "sub": {"IG 经济": 60.0, "IG 化学": 18.0, "AS 数学": 13.0, "IG 中文": 91.0, "ESL 英语": 77.0}}, {"n": "曾昕妍", "sub": {"IG 经济": 30.0, "AS 数学": 28.0}}, {"n": "刘哲豪", "sub": {"IG 经济": 40.0, "IG 化学": 57.0, "IG 物理": 10.0, "AL 英语": 50.0, "IG 中文": 86.0, "AS 数学": 48.0}}, {"n": "孙乐然", "sub": {"G10 学术英语发展课程": 75.0, "IG 化学": 47.0, "IG 物理": 84.0, "IG 生物": 61.0, "IG 中文": 89.0, "AS 数学": 24.0}}, {"n": "陶美希", "sub": {"G10 学术英语发展课程": 87.5, "IG 化学": 63.0, "IG 经济": 43.0, "IG 生物": 45.0, "IG 中文": 86.0, "AS 数学": 28.0}}, {"n": "陈宇韬", "sub": {"IG 经济": 90.0, "IG 化学": 85.0, "IG 物理": 46.0, "IG 中文": 88.0, "ESL 英语": 90.0, "AS 数学": 60.0}}, {"n": "李泊岩", "sub": {"IG 经济": 50.0, "IG 化学": 74.0, "IG 物理": 55.0, "IG 中文": 97.0, "ESL 英语": 67.0, "AS 数学": 58.0}}, {"n": "李泽语", "sub": {"IG 经济": 63.0, "IG 化学": 90.0, "IG 物理": 94.0, "AL 英语": 50.0, "IG 中文": 80.0, "AS 数学": 63.0}}, {"n": "刘泳", "sub": {"IG 经济": 73.0, "IG 化学": 43.0, "IG 物理": 42.0, "AL 英语": 67.0, "IG 中文": 89.0, "AS 数学": 42.0}}, {"n": "杨乔", "sub": {"IG 经济": 87.0, "IG 化学": 53.0, "IG 物理": 97.0, "IG 地理": 58.0, "IG 中文": 95.0, "ESL 英语": 87.0, "AS 数学": 80.0}}, {"n": "杨愉阅", "sub": {"G10 学术英语发展课程": 87.5, "IG 经济": 97.0, "IG 化学": 96.0, "IG 物理": 100.0, "IG 地理": 67.0, "IG 中文": 95.0, "AS 数学": 100.0}}, {"n": "朱其卉", "sub": {"IG 经济": 87.0, "IG 化学": 78.0, "IG 物理": 73.0, "IG 地理": 44.0, "IG 中文": 85.0, "ESL 英语": 83.0, "AS 数学": 87.0}}, {"n": "苏朗", "sub": {"G10 学术英语发展课程": 100.0, "IG 化学": 95.0, "IG 经济": 85.0, "IG 生物": 97.0, "IG 中文": 85.0, "AS 数学": 100.0}}, {"n": "文途", "sub": {"IG 化学": 92.0, "IG 经济": 68.0, "IG 物理": 100.0, "IG 中文": 95.0, "ESL 英语": 90.0, "AS 数学": 83.0}}]}, "10G2": {"grade": "十年级", "students": [{"n": "李睿璟", "sub": {"IG 经济": 3.0, "IG 化学": 14.0, "IG 物理": 10.0, "AS 数学": 0.0, "AL 英语": 33.0, "IG 中文": 85.0}}, {"n": "黄润泽", "sub": {"IG 化学": 18.0, "IG 物理": 0.0, "AS 数学": 0.0, "AL 英语": 21.0, "IG 中文": 0.0}}, {"n": "全丫", "sub": {"IG 化学": 35.0, "IG 物理": 11.11, "IG 地理": 3.0, "AS 数学": 10.0, "AL 英语": 25.0, "IG 中文": 85.0}}, {"n": "林瑾瑜", "sub": {"IG 化学": 30.0, "IG 物理": 11.11, "IG 地理": 8.0, "AS 数学": 10.0, "AL 英语": 54.0, "IG 中文": 87.0}}, {"n": "王宇圳", "sub": {"IG 经济": 27.0, "IG 化学": 14.0, "IG 物理": 0.0, "AS 数学": 13.0, "AL 英语": 50.0}}, {"n": "肖邵泷", "sub": {"IG 经济": 7.0, "IG 化学": 53.0, "IG 物理": 21.11, "AS 数学": 13.0, "AL 英语": 17.0, "IG 中文": 85.0}}, {"n": "吴熙", "sub": {"IG 物理": 14.44, "IG 地理": 0.0, "AS 数学": 13.0, "AL 英语": 54.0, "IG 中文": 89.0}}, {"n": "刘子豪", "sub": {"IG 经济": 17.0, "IG 化学": 27.0, "IG 物理": 11.11, "IG 中文": 70.0}}, {"n": "姚鉴峰", "sub": {"IG 经济": 77.0, "IG 化学": 22.0, "IG 物理": 21.11, "AS 数学": 28.0, "AL 英语": 83.0, "IG 中文": 82.0}}, {"n": "朱垲铭", "sub": {"IG 化学": 10.0, "IG 物理": 17.78, "AL 英语": 21.0, "IG 中文": 80.0}}, {"n": "孙英昊", "sub": {"G10 学术英语发展课程": 87.5, "IG 化学": 29.0, "IG 经济": 68.0, "IG 生物": 41.0, "IG 中文": 88.0, "AS 数学": 0.0}}, {"n": "刘玥含", "sub": {"IG 化学": 76.0, "IG 经济": 30.0, "IG 地理": 67.0, "AS 数学": 19.0, "IG 中文": 88.0, "ESL 英语": 67.0}}, {"n": "罗炜彤", "sub": {"IG 化学": 40.0, "AS 数学": 13.0, "IG 生物": 48.0, "AL 英语": 58.0, "IG 中文": 50.0}}, {"n": "霍珈盈", "sub": {"IG 化学": 88.0, "IG 物理": 72.5, "AS 数学": 62.0, "IG 生物": 37.0, "IG 中文": 94.0, "ESL 英语": 80.0}}, {"n": "蔡子墨", "sub": {"G10 学术英语发展课程": 87.5, "IG 化学": 50.0, "IG 经济": 50.0, "AS 数学": 23.0, "IG 生物": 48.0, "IG 中文": 94.0}}, {"n": "陈瑞蓥", "sub": {"IG 经济": 77.0, "IG 化学": 83.0, "IG 物理": 100.0, "AS 数学": 84.0, "AL 英语": 58.0, "IG 中文": 93.0}}, {"n": "张智美", "sub": {"IG 化学": 91.0, "IG 经济": 80.0, "IG 物理": 100.0, "IG 中文": 93.0, "ESL 英语": 80.0, "AS 数学": 100.0}}, {"n": "刘永琪", "sub": {"IG 化学": 73.0, "IG 经济": 45.0, "IG 物理": 87.5, "IG 中文": 93.0, "ESL 英语": 73.0, "AS 数学": 50.0}}]}, "10G3": {"grade": "十年级", "students": [{"n": "王竞尧", "sub": {"IG 物理": 10.0, "IG 经济": 17.0, "IG 中文": 56.0, "IG 地理": 5.0, "AS 数学": 10.0, "AL 英语": 29.0}}, {"n": "常世明", "sub": {"IG 物理": 13.0, "IG 经济": 3.0, "IG 中文": 80.0, "AS 数学": 0.0, "IG 化学": 2.0, "AL 英语": 33.0}}, {"n": "王东俊", "sub": {"IG 物理": 21.0, "IG 经济": 15.0, "IG 中文": 64.0, "AS 数学": 10.0, "IG 化学": 11.0, "AL 英语": 71.0}}, {"n": "吴泽茗", "sub": {"IG 物理": 60.0, "IG 经济": 55.0, "IG 中文": 76.0, "IG 地理": 38.0, "IG 化学": 26.0, "ESL 英语": 57.0, "AS 数学": 35.0}}, {"n": "黄宇熙", "sub": {"IG 物理": 21.0, "IG 经济": 33.0, "IG 中文": 76.0, "AS 数学": 23.0, "IG 化学": 40.0, "AL 英语": 71.0}}, {"n": "罗海薇", "sub": {"IG 经济": 18.0, "IG 中文": 72.0, "IG 地理": 31.0, "AS 数学": 19.0, "ESL 英语": 70.0}}, {"n": "王凯睿", "sub": {"IG 物理": 30.0, "IG 经济": 47.0, "IG 中文": 76.0, "AS 数学": 0.0, "IG 化学": 4.0, "AL 英语": 50.0}}, {"n": "邱若可", "sub": {"IG 物理": 75.0, "G10 学术英语发展课程": 87.5, "IG 经济": 30.0, "IG 中文": 76.0, "IG 地理": 67.0, "AS 数学": 37.0}}, {"n": "陈钰珊", "sub": {"IG 物理": 44.0, "IG 经济": 18.0, "IG 中文": 84.0, "IG 地理": 60.0, "AS 数学": 23.0, "ESL 英语": 67.0}}, {"n": "张耐芯", "sub": {"IG 经济": 47.0, "IG 中文": 52.0, "IG 化学": 22.0, "IG 生物": 24.0, "ESL 英语": 60.0}}, {"n": "吕周翰", "sub": {"IG 物理": 99.0, "IG 经济": 60.0, "IG 中文": 92.0, "IG 地理": 58.0, "ESL 英语": 83.0, "AS 数学": 63.0}}]}, "10D1": {"grade": "十年级", "students": [{"n": "赵子琛", "sub": {"DSE英國語文": 61.5, "DSE中國語文": 37.0, "DSE 經濟": 62.0, "DSE 物理": 32.0, "DSE 延伸數學M2": 70.0, "DSE 必修數學": 50.0, "DSE 公民與社會發展": 7.0}}, {"n": "陈浩正", "sub": {"DSE英國語文": 61.5, "DSE中國語文": 33.0, "DSE 物理": 51.0, "DSE 延伸數學M2": 85.0, "DSE 必修數學": 70.0, "DSE 公民與社會發展": 29.0, "DSE 化學": 74.2}}, {"n": "朱恩泽", "sub": {"DSE英國語文": 46.0, "DSE中國語文": 6.0, "DSE 經濟": 50.0, "DSE 物理": 56.0, "DSE 延伸數學M2": 50.0, "DSE 必修數學": 50.0, "DSE 公民與社會發展": 7.0}}, {"n": "张克啸", "sub": {"DSE 生物": 51.0, "DSE英國語文": 38.5, "DSE中國語文": 50.0, "DSE 物理": 50.0, "DSE 延伸數學M2": 85.0, "DSE 必修數學": 70.0, "DSE 公民與社會發展": 50.0}}, {"n": "廖睿童", "sub": {"DSE 生物": 56.0, "DSE中國語文": 40.0, "DSE 物理": 55.0, "DSE 延伸數學M2": 50.0, "DSE 必修數學": 50.0, "DSE 公民與社會發展": 43.0}}, {"n": "张静文", "sub": {"DSE 生物": 56.0, "DSE英國語文": 61.5, "DSE中國語文": 67.0, "DSE 經濟": 80.0, "DSE 延伸數學M2": 85.0, "DSE 必修數學": 70.0, "DSE 公民與社會發展": 43.0}}, {"n": "李鑫豪", "sub": {"DSE英國語文": 46.0, "DSE中國語文": 80.0, "DSE 經濟": 82.0, "DSE 物理": 60.0, "DSE 延伸數學M2": 85.0, "DSE 必修數學": 80.0, "DSE 公民與社會發展": 71.0}}, {"n": "周芷君", "sub": {"DSE英國語文": 46.0, "DSE中國語文": 73.0, "DSE 物理": 83.0, "DSE 延伸數學M2": 95.0, "DSE 必修數學": 95.0, "DSE 公民與社會發展": 79.0, "DSE 化學": 90.3}}]}, "11A1": {"grade": "十一年级", "students": [{"n": "周家烨", "sub": {"AS 物理": 29.0, "AL 高数": 35.0, "AL 中文": 30.0, "AL 英语": 11.0, "AL 数学": 61.0}}, {"n": "何言乐", "sub": {"AL 中文": 44.0, "AL 数学": 0.0, "AL 英语": 20.0}}, {"n": "王俊驰", "sub": {"AS 物理": 48.0, "AL 化学": 25.0, "AL 中文": 58.0, "AL 数学": 70.0, "AL 英语": 0.0}}, {"n": "莫家熙", "sub": {"AS 物理": 52.0, "AL 英语": 40.0, "AL 中文": 34.0, "AL 数学": 56.0}}, {"n": "许嘉钰", "sub": {"AL 数学": 51.0, "AL 中文": 75.0, "AS 地理": 35.0, "AL 英语": 66.0}}, {"n": "吴斯琦", "sub": {"AL 中文": 44.0, "AL 数学": 81.0, "AL 英语": 21.0}}, {"n": "梁蓓蓓", "sub": {"AL 数学": 85.0, "AL 中文": 55.0}}, {"n": "朱子涵", "sub": {"AL 化学": 67.0, "AL 中文": 70.0, "AL 英语": 54.0, "AL 数学": 66.0}}, {"n": "陈昱全", "sub": {}}, {"n": "周景晨", "sub": {"AL 高数": 93.0, "AL 数学": 90.0}}, {"n": "胡彦煊", "sub": {"AS 物理": 80.0, "AL 化学": 88.0, "AL 高数": 40.0, "AL 英语": 57.0, "AL 数学": 79.0}}, {"n": "向语时", "sub": {"AS 物理": 55.0, "AL 英语": 65.0, "AL 高数": 77.0, "AL 数学": 81.0}}]}, "11A2": {"grade": "十一年级", "students": [{"n": "林可", "sub": {"AS 物理": 38.0, "AL 英语": 65.0, "AL 数学": 44.0, "AL 计算机科学": 27.0, "AL 中文": 65.0}}, {"n": "马梓淇", "sub": {"AL 英语": 70.0, "AL 化学": 33.0, "AL 数学": 40.0, "AL 中文": 50.0, "AL 生物": 23.0}}, {"n": "萧琳芯", "sub": {"AL 数学": 34.0, "AL 中文": 85.0, "AS 地理": 64.0, "AL 英语": 54.0}}, {"n": "林钧怡", "sub": {"AL 英语": 65.0, "AL 数学": 93.0, "AL 生物": 26.0}}, {"n": "郑鸿锟", "sub": {"AL 化学": 63.0, "AL 数学": 43.0, "AL 中文": 75.0, "AL 英语": 48.0, "AL 生物": 21.0}}, {"n": "苏泓睿", "sub": {"AS 物理": 29.0, "AL 数学": 96.0, "AL 计算机科学": 86.0, "AL 英语": 61.0}}, {"n": "李旻熹", "sub": {"AS 物理": 32.0, "AL 化学": 57.0, "AL 数学": 99.0, "AL 中文": 95.0, "AL 英语": 57.0}}, {"n": "施振朗", "sub": {"AL 化学": 53.0, "AL 数学": 36.0, "AL 英语": 52.0}}, {"n": "苏钰涵", "sub": {"AS 物理": 27.0, "AL 英语": 70.0, "AL 数学": 66.0, "AL 计算机科学": 43.0, "AL 中文": 80.0}}, {"n": "邹果立", "sub": {"AS 物理": 24.0, "AL 数学": 56.0, "AL 中文": 85.0, "AL 英语": 63.0}}, {"n": "凌晟梁", "sub": {"AS 物理": 34.0, "AL 高数": 77.0, "AL 中文": 50.0, "AL 英语": 50.0, "AL 数学": 72.0}}, {"n": "杨子乔", "sub": {"AS 物理": 46.0, "AL 高数": 24.0, "AL 英语": 59.0, "AL 数学": 70.0}}, {"n": "刘梓涵", "sub": {"AL 化学": 50.0, "AL 数学": 74.0, "AL 中文": 75.0, "AL 英语": 46.0}}, {"n": "杨雨涵", "sub": {"AS 物理": 52.0, "AL 英语": 50.0, "AL 数学": 78.0, "AL 中文": 70.0}}, {"n": "王三川", "sub": {"AS 物理": 60.0, "AL 英语": 45.0, "AL 数学": 80.0, "AL 中文": 80.0}}, {"n": "刘柏昕", "sub": {"AL 英语": 45.0, "AL 化学": 53.0, "AL 高数": 65.0, "AL 数学": 72.0}}, {"n": "房子茗", "sub": {"AL 英语": 80.0, "AL 化学": 63.0, "AL 数学": 89.0, "AL 生物": 50.0}}, {"n": "张瀚元", "sub": {"AL 英语": 85.0, "AL 化学": 78.0, "AL 高数": 93.0, "AL 生物": 74.0, "AL 数学": 100.0}}, {"n": "蔡俊熹", "sub": {"AS 物理": 78.0, "AL 英语": 70.0, "AL 数学": 74.0, "AL 中文": 70.0}}, {"n": "刘瀚", "sub": {"AS 物理": 46.0, "AL 英语": 75.0, "AL 高数": 87.0, "AL 计算机科学": 87.0, "AL 数学": 79.0}}, {"n": "苏乐琪", "sub": {"AS 物理": 63.0, "AL 英语": 100.0, "AL 高数": 93.0, "AL 数学": 83.0}}, {"n": "陈思岐", "sub": {"AL 英语": 70.0, "AL 化学": 88.0, "AL 高数": 100.0, "AL 生物": 85.0, "AL 数学": 91.0}}, {"n": "曹淑怡", "sub": {"AS 物理": 80.0, "AL 英语": 85.0, "AL 化学": 53.0, "AL 高数": 71.0, "AL 数学": 88.0}}]}, "11D1": {"grade": "十一年级", "students": [{"n": "黄天佑", "sub": {"DSE英國語文": 10.0, "IG 物理": 56.0, "DSE 必修數學": 50.0, "DSE 公民與社會發展": 21.0, "DSE中國語文": 5.0, "DSE 化學": 18.6}}, {"n": "陈炯量", "sub": {"DSE英國語文": 20.0, "DSE 經濟": 62.0, "IG 物理": 65.0, "DSE 必修數學": 60.0, "DSE 公民與社會發展": 71.0, "DSE中國語文": 29.0}}, {"n": "黄文邦", "sub": {"DSE英國語文": 38.2, "IG 物理": 70.0, "DSE 延伸數學M2": 95.0, "DSE 必修數學": 95.0, "DSE 公民與社會發展": 78.0, "DSE中國語文": 53.0, "DSE 化學": 53.1}}, {"n": "吴海诚", "sub": {"DSE英國語文": 50.0, "IG 物理": 99.0, "DSE 延伸數學M2": 95.0, "DSE 必修數學": 95.0, "DSE 公民與社會發展": 71.0, "DSE中國語文": 69.0, "DSE 化學": 71.9}}]}, "12A1": {"grade": "十二年级", "students": [{"n": "柳斯博", "sub": {"AL 雅思英语": 75.0, "AL 物理": 64.0}}, {"n": "胡予瑞", "sub": {"AL 雅思英语": 55.0, "AL 高数": 94.0}}, {"n": "吴俊杰", "sub": {"AL 物理": 85.0, "AL 高数": 100.0, "AL 化学": 84.0}}, {"n": "徐浩荣", "sub": {"AL 高数": 100.0}}, {"n": "赵秉萱", "sub": {"AL 物理": 78.0, "AL 高数": 90.0, "AL 化学": 88.0}}, {"n": "杨景之", "sub": {"AL 生物": 83.0, "AL 高数": 62.0, "AL 化学": 75.0}}]}, "12A2": {"grade": "十二年级", "students": [{"n": "杨浩生", "sub": {"AL 生物": 56.0, "AL 雅思英语": 35.0, "AL 物理": 38.0, "AL 数学": 23.0}}, {"n": "欧子霖", "sub": {"AL 雅思英语": 37.5, "AL 物理": 76.0, "AL 高数": 80.0, "AL 数学": 25.0}}, {"n": "许瑞庭", "sub": {"AL 雅思英语": 35.25, "AL 化学": 19.0, "AL 数学": 50.0}}, {"n": "余文昊", "sub": {"AL 雅思英语": 35.25, "AL 物理": 13.0, "AL 高数": 59.0, "AL 数学": 81.0}}, {"n": "任嘉欣", "sub": {"AL 雅思英语": 25.0, "AL 高数": 76.0, "AL 化学": 48.0, "AL 数学": 60.0}}, {"n": "郑其心", "sub": {"AL 物理": 0.0}}]}, "12A3": {"grade": "十二年级", "students": [{"n": "周诗颖", "sub": {"AL 雅思英语": 30.0, "AL 数学": 12.0, "AL 化学": 30.0, "AL 物理": 20.0}}, {"n": "李其睿", "sub": {"AL 雅思英语": 35.0, "AL 数学": 43.0, "AL 化学": 26.0, "AL 生物": 85.0}}, {"n": "谢昕玥", "sub": {"AL 雅思英语": 40.0, "AL 物理": 0.0, "AL 生物": 0.0}}, {"n": "陈俊涵", "sub": {"AL 雅思英语": 55.0, "AL 数学": 57.0, "AL 物理": 10.0}}, {"n": "许竣恺", "sub": {"AL 数学": 45.0, "AL 物理": 0.0}}, {"n": "曹北辰", "sub": {"AL 雅思英语": 55.0, "AL 数学": 40.0, "AL 计算机科学": 35.0, "AL 物理": 47.0}}, {"n": "黄筠贻", "sub": {"AL 数学": 45.0, "AL 化学": 33.0, "AL 物理": 78.0, "AL 经济": 64.0}}, {"n": "邓可欣", "sub": {"雅思英语": 80.0, "AL 数学": 81.0, "AL 物理": 30.0, "AL 经济": 40.0}}, {"n": "郭裕铭", "sub": {"雅思英语": 25.0, "AL 数学": 57.0, "AL 物理": 40.0}}, {"n": "倪奕", "sub": {"雅思英语": 80.0, "AL 数学": 12.0, "AL 经济": 93.0}}, {"n": "郑凯琳", "sub": {"AL 商务": 55.0, "AL 数学": 45.0, "AL 经济": 60.0}}, {"n": "李梓鸣", "sub": {"AL 数学": 71.0, "AL 经济": 70.0}}, {"n": "周芷萱", "sub": {"雅思英语": 65.0, "AL 数学": 60.0, "AL 经济": 74.0}}, {"n": "沈伟杰", "sub": {"雅思英语": 55.0, "AL 数学": 40.0, "AL 物理": 49.0, "AL 经济": 57.0}}, {"n": "梁洛瑜", "sub": {}}, {"n": "吴晴雯", "sub": {"AL 雅思英语": 40.0, "AL 数学": 81.0, "AL 物理": 63.0}}, {"n": "唐子宸", "sub": {"AL 计算机科学": 85.0, "AL 化学": 40.0}}]}, "12A4": {"grade": "十二年级", "students": [{"n": "阮龙秀如", "sub": {"AL 商务": 75.0, "AL 数学": 0.0, "AL 经济": 37.0}}, {"n": "何家炜", "sub": {"AL 数学": 86.0, "AL 化学": 78.0, "AL 物理": 82.0, "AL 生物": 4.0}}, {"n": "法皓玥", "sub": {"AL 雅思英语": 35.0, "AL 数学": 80.0, "AL 经济": 54.0}}, {"n": "张万里", "sub": {"AL 雅思英语": 30.0, "AL 数学": 71.0, "AL 化学": 40.0}}, {"n": "刘尹尚", "sub": {"AL 雅思英语": 30.0, "AL 数学": 48.0, "AL 化学": 70.0, "AL 经济": 64.0}}, {"n": "黄沛轩", "sub": {"雅思英语": 65.0, "AL 数学": 76.0, "AL 化学": 20.0, "AL 经济": 77.0}}, {"n": "易媛", "sub": {"AL 数学": 74.0, "AL 化学": 78.0}}, {"n": "陈奕涛", "sub": {"雅思英语": 65.0, "AL 数学": 79.0, "AL 化学": 60.0, "AL 物理": 61.0}}, {"n": "彭熙悦", "sub": {"AL 数学": 81.0, "AL 化学": 87.0}}, {"n": "胡可瑜", "sub": {"AL 数学": 100.0, "AL 化学": 70.0, "AL 经济": 84.0}}, {"n": "林睿妍", "sub": {}}, {"n": "林致赓", "sub": {"雅思英语": 60.0, "AL 数学": 98.0, "AL 化学": 52.0, "AL 物理": 75.0}}, {"n": "胡予琪", "sub": {"AL 雅思英语": 55.0, "AL 数学": 95.0, "AL 经济": 74.0}}, {"n": "郭颖文", "sub": {"AL 商务": 43.0, "AL 数学": 45.0}}, {"n": "唐子恒", "sub": {"AL 数学": 100.0, "AL 化学": 44.0, "AL 物理": 81.0}}]}, "12D1": {"grade": "十二年级", "students": [{"n": "何雨泽", "sub": {"DSE 經濟": 78.0, "DSE 必修數學": 70.0}}, {"n": "廖子杰", "sub": {}}, {"n": "张熠安", "sub": {"DSE 生物": 65.0, "DSE 化學": 48.0, "DSE 必修數學": 80.0, "DSE 公民與社會發展": 79.0, "DSE中國語文": 60.0}}]}};
+const GRADES = [["九年级", ["9G1", "9G2"]], ["十年级", ["10G1", "10G2", "10G3", "10D1"]], ["十一年级", ["11A1", "11A2", "11D1"]], ["十二年级", ["12A1", "12A2", "12A3", "12A4", "12D1"]]];
+const LVL = s => s>=90?'A*':s>=80?'A':s>=70?'B':s>=60?'C':s>=50?'D':s>=40?'E':'U';
+const PASS = s => s>=40;
+const esc = t => String(t).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+// 班级下拉（按年级分组）
+const clsSel=document.getElementById('clsSel'), stuSel=document.getElementById('stuSel'), result=document.getElementById('result');
+let clsHTML='<option value="">— 请选择班级 —</option>';
+GRADES.forEach(([g,cs])=>{
+  clsHTML+='<optgroup label="'+esc(g)+'">'+cs.map(c=>'<option value="'+c+'">'+esc(c)+'（'+esc(g)+'）</option>').join('')+'</optgroup>';
+});
+clsSel.innerHTML=clsHTML;
+
+clsSel.addEventListener('change',()=>{
+  const c=clsSel.value; stuSel.disabled=!c;
+  let html='<option value="">'+ (c?'— 请选择学生 —':'— 请先选择班级 —')+'</option>';
+  if(c){
+    const sts=DATA[c].students;
+    sts.forEach(s=>{html+='<option value="'+esc(s.n)+'">'+esc(s.n)+'</option>';});
+  }
+  stuSel.innerHTML=html; result.classList.remove('show'); result.innerHTML='';
+});
+
+stuSel.addEventListener('change',()=>{
+  const c=clsSel.value, n=stuSel.value;
+  if(!c||!n){result.classList.remove('show');result.innerHTML='';return;}
+  const cls=DATA[c], stu=cls.students.find(s=>s.n===n);
+  if(!stu){result.innerHTML='<div class="empty">未找到该学生数据</div>';result.classList.add('show');return;}
+  const subs=Object.entries(stu.sub||{}).sort((a,b)=>b[1]-a[1]);
+  const cnt=subs.length;
+  const avg=cnt? (subs.reduce((a,x)=>a+x[1],0)/cnt):0;
+  const passes=subs.filter(x=>PASS(x[1])).length, fails=cnt-passes;
+  const best=subs.length? subs[0]:null;
+  const worst=subs.length? subs[subs.length-1]:null;
+  // 等级分布条
+  const dist={}; subs.forEach(x=>{const l=LVL(x[1]);dist[l]=(dist[l]||0)+1;});
+  const cols={'A*':'var(--g9)','A':'var(--g8)','B':'var(--g7)','C':'var(--g6)','D':'var(--g5)','E':'var(--g4)','U':'var(--g2)'};
+  const order=['A*','A','B','C','D','E','U'];
+  const total=Math.max(cnt,1);
+  const ranks='<div class="ranks">'+order.map(l=>dist[l]?('<span class="ranksi" style="background:'+cols[l]+'" title="'+l+' '+dist[l]+'门"></span>'):'').join('')+'</div>';
+  let rows='';
+  subs.forEach(([k,v])=>{
+    const l=LVL(v), ok=PASS(v);
+    rows+='<tr><td>'+esc(k)+'</td><td class="num">'+v+'</td>'
+      +'<td class="num"><span class="badge '+(ok?'a':'f')+'">'+l+'</span></td>'
+      +'<td class="num '+(ok?'pass':'fail')+'">'+(ok?'及格':'不及格')+'</td></tr>';
+  });
+  result.innerHTML=
+    '<div class="shead"><h2>'+esc(n)+'</h2><p class="g">'+esc(c)+' · '+esc(cls.grade)+'</p></div>'
+    +'<div class="sum">'
+    +'<span>科目<b>'+cnt+'</b>门</span>'
+    +'<span>平均分<b>'+avg.toFixed(1)+'</b></span>'
+    +'<span>及格<b>'+passes+'</b>门</span>'
+    +'<span>不及格<b class="'+(fails?'fail':'pass')+'">'+fails+'</b>门</span>'
+    +(best?'<span>最高<b>'+esc(best[0])+' '+best[1]+'</b></span>':'')
+    +(worst?'<span>最低<b>'+esc(worst[0])+' '+worst[1]+'</b></span>':'')
+    +'</div>'
+    +'<div class="legend"><b>等级分布：</b>'+ranks+'</div>'
+    +'<div class="tablewrap"><table><caption>全部科目成绩</caption>'
+    +'<thead><tr><th>科目</th><th class="num">分数</th><th class="num">等级</th><th class="num">Status</th></tr></thead>'
+    +'<tbody>'+(rows||'<tr><td colspan="4" class="empty">暂无成绩数据</td></tr>')+'</tbody></table></div>';
+  result.classList.add('show');
+});
+</script>
+</body></html>
